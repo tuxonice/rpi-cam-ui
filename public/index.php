@@ -57,7 +57,8 @@
         <div class="col-md-6">
           <h2>Configuration</h2>
           <form>
-  			<button type="button" class="btn btn-default" id="live-image">Get Image</button>
+  			<button type="button" class="btn btn-primary btn-lg " id="live-image" 
+			data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Processing Image">Get Image</button>
 		  </form>
        </div>
         
@@ -80,14 +81,17 @@
     <script src="resources/assets/js/ie10-viewport-bug-workaround.js"></script>
     <script type="text/javascript">
 		$("#live-image").on('click',function(){
-			$.ajax({
-				  method: "POST",
-				  url: "ajax.php"
-				})
-				  .done(function( image ) {
-				    $("#live-image-placeholder").attr('src',image);
-				  });			
-			});
+		  var $this = $(this);
+		  $this.button('loading');			
+  		  $.ajax({
+			  method: "POST",
+			  url: "ajax.php"
+			})
+			  .done(function( image ) {
+			    $("#live-image-placeholder").attr('src',image);
+			    $this.button('reset');
+			});			
+		});
     </script>
   </body>
 </html>

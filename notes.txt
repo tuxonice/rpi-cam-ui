@@ -1,0 +1,42 @@
+http://redmine.lighttpd.net/boards/2/topics/6247
+
+What I have done is explained below and seems to be working, but I am not confident that it is the best way or even that it covers all the bases. But if it does, it seems like something that might be useful to other people so I would like to have it posted here or maybe a wiki page to help out the next person like me. I was kind of surprised this was not already in the wiki or an FAQ because I think it would be a common request, but maybe I just didn't find it, or maybe more experienced users know what to do. Anyway:
+
+I am not experienced with Linux of lighttpd but have been using both on a Raspberry Pi (running Raspbian Linux 3.18.7+) project I have been working on.
+
+I have generally been doing all my development using user "pi" in group "pi", the default for their NOOBS Raspbian installation.
+
+I started running into complications when I wanted to give my CGI programs access to some files I had created with owner pi:pi. I tried adding user www-data to group pi - didn't help. I then started changing ownership and permissions and it seemed like that was leading to neverending complications, so I decided that what I really wanted was for lightpd to run under user pi, so that the CGI programs would also carry pi permissions.
+
+I tried changing server.username and server.groupname in /etc/lighttpd/lighttpd.conf but when I attempted to restart the lighttpd server additional errors occurred, permission denied to /var/log/lighttpd/error.log.
+
+I found the following post and used the instructions there:
+
+[[https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=715205#25]]
+
+Modified slightly, here is what I ended up doing, 8 steps:
+
+1) sudo service lighttpd stop
+
+2) sudo nano /etc/lighttpd/lighttpd.conf
+      manually edit to: server.username = "pi" 
+                        server.groupname = "pi"
+
+3) sudo nano /etc/init.d/lighttpd
+      manually edit install line:
+        from: install -d -o www-data -g www-data -m 0750 "/var/run/lighttpd" 
+          to: install -d -o pi -g pi -m 0750 "/var/run/lighttpd"
+
+4) sudo chown -R pi:pi /var/log/lighttpd
+
+5) sudo chown pi:pi /var/run/lighttpd
+
+6) sudo chown pi:pi /var/cache/lighttpd/compress/*
+
+7) sudo chown pi:pi /var/cache/lighttpd/upload  <---my system had no files here
+
+8) sudo service lighttpd start
+
+The server seems to be working OK, running as pi, and my CGI programs are able to access pi's files.
+
+Anybody know any reason I should be doing this a different way? I don't want to create problems for myself down the road.
