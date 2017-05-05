@@ -56,7 +56,23 @@
         </div>
         <div class="col-md-6">
           <h2>Configuration</h2>
-          <form>
+          <form class="form-horizontal">
+          
+          <div class="form-group">
+    		<label for="width" class="col-sm-2 control-label">Width</label>
+    		<div class="col-sm-10">
+      		<input type="text" class="form-control" id="width">
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="height" class="col-sm-2 control-label">Height</label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control" id="Height">
+    </div>
+  </div>
+          
+          
+          
   			<button type="button" class="btn btn-primary btn-lg " id="live-image" 
 			data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Processing Image">Get Image</button>
 		  </form>

@@ -40,3 +40,12 @@ Modified slightly, here is what I ended up doing, 8 steps:
 The server seems to be working OK, running as pi, and my CGI programs are able to access pi's files.
 
 Anybody know any reason I should be doing this a different way? I don't want to create problems for myself down the road.
+
+-------------------------------------------------------------
+
+You should be able update /etc/sudoers to allow www-data to run your script using sudo by adding the following line to /etc/sudoers:
+
+# User alias specification
+www-data ALL = NOPASSWD: /path/to/script.sh
+
+$out = exec('sudo ./script.sh');
