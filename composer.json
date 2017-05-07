@@ -1,0 +1,15 @@
+{
+	"name" : "tuxonice/rpi-cam-ui",
+	"license" : "MIT",
+	"keywords" : [
+		"raspberrypi"
+	],
+	"require-dev" : {
+		"phpunit/phpunit" : "4.0.*"
+	},
+	"autoload" : {
+		"psr-4" : {
+			"tlab\\" : "src"
+		}
+	}
+}
