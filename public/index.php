@@ -75,17 +75,17 @@
     	
     	<div class="form-group">
     		<label for="width">Image Width</label>
-    		<input type="text" class="form-control" id="width">
+    		<input type="text" class="form-control" id="width" name="with">
     		<p class="help-block">Example block-level help text here.</p>
   		</div>
   		<div class="form-group">
-    		<label for="width">Image Height</label>
-    		<input type="text" class="form-control" id="width">
+    		<label for="height">Image Height</label>
+    		<input type="text" class="form-control" id="height" name="height">
     		<p class="help-block">Example block-level help text here.</p>
   		</div>
   		<div class="form-group">
-    		<label for="width">Image Rotation</label>
-    		<select class="form-control">
+    		<label for="rotation">Image Rotation</label>
+    		<select class="form-control" id="rotation" name="rotation">
   				<option>0 Degrees</option>
   				<option>90 Degrees</option>
   				<option>180 Degrees</option>
@@ -95,20 +95,20 @@
   		</div>
   		<div class="checkbox">
   		<label>
-    		<input type="checkbox" value="">
+    		<input name="hflip" id="hflip" type="checkbox" value="1" >
     		Horizontal flip
   		</label>
 		</div>
 		<div class="checkbox">
   		<label>
-    		<input type="checkbox" value="">
+    		<input name="vflip" id="vflip" type="checkbox" value="1">
     		Vertical flip
   		</label>
 		</div>
 		
 		<div class="checkbox">
   		<label>
-    		<input type="checkbox" value="">
+    		<input type="checkbox" name="stats" id="stats" value="1">
     		Display image statistics
   		</label>
 		</div>
@@ -122,44 +122,44 @@
     <div role="tabpanel" class="tab-pane" id="effects" style="margin-top:20px; margin-bottom:20px;">
     	
     	<div class="form-group">
-    		<label for="width">Image sharpness</label>
-    		<input type="text" class="form-control" id="width" value="0">
+    		<label for="sharpness">Image sharpness</label>
+    		<input type="text" class="form-control" id="sharpness" id="sharpness" value="0">
     		<p class="help-block">Sets the sharpness of the image (-100 - 100). 0 is the default.</p>
   		</div>
   		
   		<div class="form-group">
-    		<label for="width">Image contrast</label>
-    		<input type="text" class="form-control" id="width" value="0">
+    		<label for="contrast">Image contrast</label>
+    		<input type="text" class="form-control" id="contrast" name="contrast" value="0">
     		<p class="help-block">Sets the contrast of the image (-100 - 100). 0 is the default.</p>
   		</div>
   		
   		<div class="form-group">
-    		<label for="width">Image brightness</label>
-    		<input type="text" class="form-control" id="width" value="50">
+    		<label for="brightness">Image brightness</label>
+    		<input type="text" class="form-control" id="brightness" name="brightness" value="50">
     		<p class="help-block">Sets the brightness of the image. 50 is the default. 0 is black, 100 is white.</p>
   		</div>
   		
   		<div class="form-group">
-    		<label for="width">Image saturation</label>
-    		<input type="text" class="form-control" id="width" value="0">
+    		<label for="saturation">Image saturation</label>
+    		<input type="text" class="form-control" id="saturation" name="saturation" value="0">
     		<p class="help-block">Sets the colour saturation of the image (-100 - 100). 0 is the default.</p>
   		</div>
   		
   		<div class="form-group">
-    		<label for="width">Capture ISO</label>
-    		<input type="text" class="form-control" id="width" value="">
+    		<label for="ISO">Capture ISO</label>
+    		<input type="text" class="form-control" id="ISO" name="ISO" value="">
     		<p class="help-block">Sets the ISO to be used for captures (100 - 800).</p>
   		</div>
   		
   		<div class="form-group">
-    		<label for="width">EV compensation</label>
-    		<input type="text" class="form-control" id="width" value="0">
+    		<label for="ev">EV compensation</label>
+    		<input type="text" class="form-control" id="ev" name="ev" value="0">
     		<p class="help-block">Sets the EV compensation of the image. Default is 0.</p>
   		</div>
     	
     	<div class="form-group">
-    		<label for="width">Exposure mode</label>
-    		<select class="form-control">
+    		<label for="exposure">Exposure mode</label>
+    		<select class="form-control" id="exposure" name="exposure">
     		<option value="auto">use automatic exposure mode</option>
    			<option value="night">Select setting for night shooting</option> 
    			<option value="nightpreview">nightpreview</option>
@@ -177,8 +177,8 @@
   		</div>
   		
   		<div class="form-group">
-    		<label for="width">Automatic White Balance (AWB) mode</label>
-    		<select class="form-control">
+    		<label for="awb">Automatic White Balance (AWB) mode</label>
+    		<select class="form-control" name="awb" id="awb">
     		<option value="auto">automatic mode (default)</option>
     		<option value="off">turn off white balance calculation</option>
     		<option value="sun">sunny mode (between 5000K and 6500K)</option>
@@ -194,8 +194,8 @@
   		</div>
   		
   		<div class="form-group">
-    		<label for="width">Image effect</label>
-    		<select class="form-control">
+    		<label for="imxfx">Image effect</label>
+    		<select class="form-control" name="imxfx" id="imxfx">
     		<option value="none">No effect (default)</option>
     		<option value="negative">Invert the image colours</option>
     		<option value="solarise">Solarise the image</option>
@@ -231,13 +231,13 @@
     <div role="tabpanel" class="tab-pane" id="timelapse" style="margin-top:20px; margin-bottom:20px;">
     
     	<div class="form-group">
-    		<label for="width">Total Duration (in seconds)</label>
-    		<input type="text" class="form-control" id="width" value="0">
+    		<label for="t">Total Duration (in seconds)</label>
+    		<input type="text" class="form-control" id="t" name="t" value="0">
   		</div>
   		
   		<div class="form-group">
-    		<label for="width">Image step (in seconds)</label>
-    		<input type="text" class="form-control" id="width" value="0">
+    		<label for="tl">Image step (in seconds)</label>
+    		<input type="text" class="form-control" id="tl" name="tl" value="0">
   		</div>
     
     </div>
