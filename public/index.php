@@ -18,7 +18,7 @@
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <link href="resources/assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
 
-    
+
     <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
     <!--[if lt IE 9]><script src="resources/assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
     <script src="resources/assets/js/ie-emulation-modes-warning.js"></script>
@@ -52,27 +52,25 @@
         <div class="col-md-6">
           <h2>Preview</h2>
           <img id="live-image-placeholder" src="http://placehold.it/450x450" class="img-responsive" alt="Responsive image">
-          
+
         </div>
-        <!-- -------------------------------- -->
         <div class="col-md-6">
           <h2>Configuration</h2>
           <form>
-          
-          
-          <div>
+        <div>
 
   <!-- Nav tabs -->
   <ul class="nav nav-tabs" role="tablist">
     <li role="presentation" class="active"><a href="#basic" aria-controls="basic" role="tab" data-toggle="tab">Basic</a></li>
     <li role="presentation"><a href="#effects" aria-controls="effects" role="tab" data-toggle="tab">Effects</a></li>
+    <li role="presentation"><a href="#transformations" aria-controls="transformations" role="tab" data-toggle="tab">Transformations</a></li>
     <li role="presentation"><a href="#timelapse" aria-controls="timelapse" role="tab" data-toggle="tab">Timelapse</a></li>
   </ul>
 
   <!-- Tab panes -->
   <div class="tab-content">
     <div role="tabpanel" class="tab-pane active" id="basic" style="margin-top:20px; margin-bottom:20px;">
-    	
+
     	<div class="form-group">
     		<label for="width">Image Width</label>
     		<input type="text" class="form-control" id="width" name="with">
@@ -86,12 +84,11 @@
   		<div class="form-group">
     		<label for="rotation">Image Rotation</label>
     		<select class="form-control" id="rotation" name="rotation">
-  				<option>0 Degrees</option>
-  				<option>90 Degrees</option>
-  				<option>180 Degrees</option>
-  				<option>270 Degrees</option>
+  				<option value="0">0 Degrees</option>
+  				<option value="90">90 Degrees</option>
+  				<option value="180">180 Degrees</option>
+  				<option value="270">270 Degrees</option>
 			</select>
-    		<p class="help-block">Example block-level help text here.</p>
   		</div>
   		<div class="checkbox">
   		<label>
@@ -105,63 +102,21 @@
     		Vertical flip
   		</label>
 		</div>
-		
+
 		<div class="checkbox">
   		<label>
     		<input type="checkbox" name="stats" id="stats" value="1">
     		Display image statistics
   		</label>
 		</div>
-		
-		
-    
-  
-    
     </div>
-    
+
     <div role="tabpanel" class="tab-pane" id="effects" style="margin-top:20px; margin-bottom:20px;">
-    	
-    	<div class="form-group">
-    		<label for="sharpness">Image sharpness</label>
-    		<input type="text" class="form-control" id="sharpness" id="sharpness" value="0">
-    		<p class="help-block">Sets the sharpness of the image (-100 - 100). 0 is the default.</p>
-  		</div>
-  		
-  		<div class="form-group">
-    		<label for="contrast">Image contrast</label>
-    		<input type="text" class="form-control" id="contrast" name="contrast" value="0">
-    		<p class="help-block">Sets the contrast of the image (-100 - 100). 0 is the default.</p>
-  		</div>
-  		
-  		<div class="form-group">
-    		<label for="brightness">Image brightness</label>
-    		<input type="text" class="form-control" id="brightness" name="brightness" value="50">
-    		<p class="help-block">Sets the brightness of the image. 50 is the default. 0 is black, 100 is white.</p>
-  		</div>
-  		
-  		<div class="form-group">
-    		<label for="saturation">Image saturation</label>
-    		<input type="text" class="form-control" id="saturation" name="saturation" value="0">
-    		<p class="help-block">Sets the colour saturation of the image (-100 - 100). 0 is the default.</p>
-  		</div>
-  		
-  		<div class="form-group">
-    		<label for="ISO">Capture ISO</label>
-    		<input type="text" class="form-control" id="ISO" name="ISO" value="">
-    		<p class="help-block">Sets the ISO to be used for captures (100 - 800).</p>
-  		</div>
-  		
-  		<div class="form-group">
-    		<label for="ev">EV compensation</label>
-    		<input type="text" class="form-control" id="ev" name="ev" value="0">
-    		<p class="help-block">Sets the EV compensation of the image. Default is 0.</p>
-  		</div>
-    	
     	<div class="form-group">
     		<label for="exposure">Exposure mode</label>
     		<select class="form-control" id="exposure" name="exposure">
     		<option value="auto">use automatic exposure mode</option>
-   			<option value="night">Select setting for night shooting</option> 
+   			<option value="night">Select setting for night shooting</option>
    			<option value="nightpreview">nightpreview</option>
    			<option value="backlight"> select setting for backlit subject</option>
    			<option value="spotlight">spotlight</option>
@@ -171,11 +126,11 @@
    			<option value="verylong"> select setting for long exposures</option>
    			<option value="fixedfps"> constrain fps to a fixed value</option>
    			<option value="antishake"> antishake mode</option>
-   			<option value="fireworks"> select setting optimised for fireworks</option> 
+   			<option value="fireworks"> select setting optimised for fireworks</option>
 			</select>
     		<p class="help-block">Example block-level help text here.</p>
   		</div>
-  		
+
   		<div class="form-group">
     		<label for="awb">Automatic White Balance (AWB) mode</label>
     		<select class="form-control" name="awb" id="awb">
@@ -192,7 +147,7 @@
     		</select>
     		<p class="help-block">Modes for which colour temperature ranges (K) are available have these settings in brackets</p>
   		</div>
-  		
+
   		<div class="form-group">
     		<label for="imxfx">Image effect</label>
     		<select class="form-control" name="imxfx" id="imxfx">
@@ -218,47 +173,78 @@
     		<option value="colourpoint">Colourpoint (not fully implemented)</option>
     		<option value="colourbalance">colourbalance (not fully implemented)</option>
     		<option value="cartoon">Cartoon (not fully implemented)</option>
-    		
-    		
-    		
+
+
+
     		</select>
     		<p class="help-block">Set an effect to be applied to the image</p>
   		</div>
-    
-    
-    
+
+
+
     </div>
+
+    <div role="tabpanel" class="tab-pane" id="transformations" style="margin-top:20px; margin-bottom:20px;">
+
+      <div class="form-group">
+        <label for="sharpness">Image sharpness</label>
+        <input type="text" class="form-control" id="sharpness" id="sharpness" value="0">
+        <p class="help-block">Sets the sharpness of the image (-100 - 100). 0 is the default.</p>
+      </div>
+
+      <div class="form-group">
+        <label for="contrast">Image contrast</label>
+        <input type="text" class="form-control" id="contrast" name="contrast" value="0">
+        <p class="help-block">Sets the contrast of the image (-100 - 100). 0 is the default.</p>
+      </div>
+
+      <div class="form-group">
+        <label for="brightness">Image brightness</label>
+        <input type="text" class="form-control" id="brightness" name="brightness" value="50">
+        <p class="help-block">Sets the brightness of the image. 50 is the default. 0 is black, 100 is white.</p>
+      </div>
+
+      <div class="form-group">
+        <label for="saturation">Image saturation</label>
+        <input type="text" class="form-control" id="saturation" name="saturation" value="0">
+        <p class="help-block">Sets the colour saturation of the image (-100 - 100). 0 is the default.</p>
+      </div>
+
+      <div class="form-group">
+        <label for="ISO">Capture ISO</label>
+        <input type="text" class="form-control" id="ISO" name="ISO" value="">
+        <p class="help-block">Sets the ISO to be used for captures (100 - 800).</p>
+      </div>
+
+      <div class="form-group">
+        <label for="ev">EV compensation</label>
+        <input type="text" class="form-control" id="ev" name="ev" value="0">
+        <p class="help-block">Sets the EV compensation of the image. Default is 0.</p>
+      </div>
+
+    </div>
+
+
     <div role="tabpanel" class="tab-pane" id="timelapse" style="margin-top:20px; margin-bottom:20px;">
-    
+
     	<div class="form-group">
     		<label for="t">Total Duration (in seconds)</label>
     		<input type="text" class="form-control" id="t" name="t" value="0">
   		</div>
-  		
+
   		<div class="form-group">
     		<label for="tl">Image step (in seconds)</label>
     		<input type="text" class="form-control" id="tl" name="tl" value="0">
   		</div>
-    
+
     </div>
   </div>
 
 </div>
-          
-          
-          
-          
-          
-          
-          
-          
-          
-  			<button type="button" class="btn btn-primary btn-lg " id="live-image" 
+  			<button type="button" class="btn btn-primary btn-lg " id="live-image"
 			data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Processing Image">Get Image</button>
 		  </form>
        </div>
-       <!-- ------------------------------------ -->
-        
       </div>
 
       <hr>
@@ -280,7 +266,7 @@
     $(function(){
 		$("#live-image").on('click',function(){
 		  var $this = $(this);
-		  $this.button('loading');			
+		  $this.button('loading');
   		  $.ajax({
 			  method: "POST",
 			  url: "ajax.php"
@@ -288,7 +274,7 @@
 			  .done(function( image ) {
 			    $("#live-image-placeholder").attr('src',image);
 			    $this.button('reset');
-			});			
+			});
 		});
 
 
