@@ -15,10 +15,6 @@
     <link href="resources/css/bootstrap.min.css" rel="stylesheet">
     <link href="resources/css/custom.css" rel="stylesheet">
 
-    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <link href="resources/assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
-
-
     <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
     <!--[if lt IE 9]><script src="resources/assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
     <script src="resources/assets/js/ie-emulation-modes-warning.js"></script>
@@ -56,8 +52,8 @@
         </div>
         <div class="col-md-6">
           <h2>Configuration</h2>
-          <form>
-        <div>
+        <form id="configData">
+          <div>
 
   <!-- Nav tabs -->
   <ul class="nav nav-tabs" role="tablist">
@@ -130,7 +126,6 @@
 			</select>
     		<p class="help-block">Example block-level help text here.</p>
   		</div>
-
   		<div class="form-group">
     		<label for="awb">Automatic White Balance (AWB) mode</label>
     		<select class="form-control" name="awb" id="awb">
@@ -147,7 +142,6 @@
     		</select>
     		<p class="help-block">Modes for which colour temperature ranges (K) are available have these settings in brackets</p>
   		</div>
-
   		<div class="form-group">
     		<label for="imxfx">Image effect</label>
     		<select class="form-control" name="imxfx" id="imxfx">
@@ -173,46 +167,77 @@
     		<option value="colourpoint">Colourpoint (not fully implemented)</option>
     		<option value="colourbalance">colourbalance (not fully implemented)</option>
     		<option value="cartoon">Cartoon (not fully implemented)</option>
-
-
-
     		</select>
     		<p class="help-block">Set an effect to be applied to the image</p>
   		</div>
-
-
-
     </div>
 
     <div role="tabpanel" class="tab-pane" id="transformations" style="margin-top:20px; margin-bottom:20px;">
 
       <div class="form-group">
         <label for="sharpness">Image sharpness</label>
-        <input type="text" class="form-control" id="sharpness" id="sharpness" value="0">
+        <select class="form-control" name="sharpness" id="sharpness">
+          <?php for($i=-100; $i<=-1; $i++){ ?>
+          <option value="<?php echo($i); ?>"><?php echo($i); ?></option>
+          <?php } ?>
+          <option value="0" selected="selected">0</option>
+          <?php for($i=1; $i<=100; $i++){ ?>
+          <option value="<?php echo($i); ?>"><?php echo($i); ?></option>
+          <?php } ?>
+        </select>
         <p class="help-block">Sets the sharpness of the image (-100 - 100). 0 is the default.</p>
       </div>
 
       <div class="form-group">
         <label for="contrast">Image contrast</label>
-        <input type="text" class="form-control" id="contrast" name="contrast" value="0">
+      <select class="form-control" name="contrast" id="contrast">
+        <?php for($i=-100; $i<=-1; $i++){ ?>
+        <option value="<?php echo($i); ?>"><?php echo($i); ?></option>
+        <?php } ?>
+        <option value="0" selected="selected">0</option>
+        <?php for($i=1; $i<=100; $i++){ ?>
+        <option value="<?php echo($i); ?>"><?php echo($i); ?></option>
+        <?php } ?>
+      </select>
         <p class="help-block">Sets the contrast of the image (-100 - 100). 0 is the default.</p>
       </div>
 
       <div class="form-group">
         <label for="brightness">Image brightness</label>
-        <input type="text" class="form-control" id="brightness" name="brightness" value="50">
+        <select class="form-control" name="brightness" id="brightness">
+          <?php for($i=0; $i<=49; $i++){ ?>
+          <option value="<?php echo($i); ?>"><?php echo($i); ?></option>
+          <?php } ?>
+          <option value="50" selected="selected">50</option>
+          <?php for($i=51; $i<=100; $i++){ ?>
+          <option value="<?php echo($i); ?>"><?php echo($i); ?></option>
+          <?php } ?>
+        </select>
         <p class="help-block">Sets the brightness of the image. 50 is the default. 0 is black, 100 is white.</p>
       </div>
 
       <div class="form-group">
         <label for="saturation">Image saturation</label>
-        <input type="text" class="form-control" id="saturation" name="saturation" value="0">
+        <select class="form-control" name="saturation" id="saturation">
+          <?php for($i=-100; $i<=-1; $i++){ ?>
+          <option value="<?php echo($i); ?>"><?php echo($i); ?></option>
+          <?php } ?>
+          <option value="0" selected="selected">0</option>
+          <?php for($i=1; $i<=100; $i++){ ?>
+          <option value="<?php echo($i); ?>"><?php echo($i); ?></option>
+          <?php } ?>
+        </select>
         <p class="help-block">Sets the colour saturation of the image (-100 - 100). 0 is the default.</p>
       </div>
 
       <div class="form-group">
         <label for="ISO">Capture ISO</label>
-        <input type="text" class="form-control" id="ISO" name="ISO" value="">
+        <select class="form-control" name="ISO" id="ISO">
+          <option value="100" selected="selected">100</option>
+          <?php for($i=110; $i<=800; $i+=10){ ?>
+          <option value="<?php echo($i); ?>"><?php echo($i); ?></option>
+          <?php } ?>
+        </select>
         <p class="help-block">Sets the ISO to be used for captures (100 - 800).</p>
       </div>
 
@@ -228,20 +253,20 @@
     <div role="tabpanel" class="tab-pane" id="timelapse" style="margin-top:20px; margin-bottom:20px;">
 
     	<div class="form-group">
-    		<label for="t">Total Duration (in seconds)</label>
-    		<input type="text" class="form-control" id="t" name="t" value="0">
+    		<label for="timeout">Total Duration (in seconds)</label>
+    		<input type="text" class="form-control" id="timeout" name="timeout" value="0">
   		</div>
 
   		<div class="form-group">
-    		<label for="tl">Image step (in seconds)</label>
-    		<input type="text" class="form-control" id="tl" name="tl" value="0">
+    		<label for="timelapse">Image step (in seconds)</label>
+    		<input type="text" class="form-control" id="timelapse" name="timelapse" value="0">
   		</div>
 
     </div>
   </div>
 
 </div>
-  			<button type="button" class="btn btn-primary btn-lg " id="live-image"
+  			<button type="submit" class="btn btn-primary btn-lg " id="live-image"
 			data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Processing Image">Get Image</button>
 		  </form>
        </div>
@@ -264,6 +289,33 @@
     <script src="resources/assets/js/ie10-viewport-bug-workaround.js"></script>
     <script type="text/javascript">
     $(function(){
+
+
+
+
+$("#configData").submit(function(e) {
+
+  var url = "ajax.php"; // the script where you handle the form input.
+
+  console.log($("#configData").serialize());
+
+  $.ajax({
+         type: "POST",
+         url: url,
+         data: $("#configData").serialize(), // serializes the form's elements.
+         success: function(data)
+         {
+             console.log(data); // show response from the php script.
+         }
+       });
+
+  e.preventDefault(); // avoid to execute the actual submit of the form.
+});
+
+
+
+
+/*
 		$("#live-image").on('click',function(){
 		  var $this = $(this);
 		  $this.button('loading');
@@ -276,7 +328,7 @@
 			    $this.button('reset');
 			});
 		});
-
+*/
 
 		$('#myTabs a').click(function (e) {
 			  e.preventDefault()

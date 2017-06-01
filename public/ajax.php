@@ -2,7 +2,35 @@
 require __DIR__.'/../vendor/autoload.php';
 
 
-//$script = new tlab\shellScript(array('hf'=>1,'rot'=>90,'vf'=>1));
+/*
+  # Basic
+  with
+  height
+  rotation
+  hflip
+  vflip
+  stats
+
+  # Effects
+  exposure
+  awb
+  imxfx
+
+  # Transformations
+  sharpness
+  contrast
+  brightness
+  saturation
+  ISO
+  ev
+
+  # Timelapse
+  timeout
+  timelapse
+
+*/
+
+//$script = new tlab\shellScript($_POST);
 //$script->output();
 
 //sleep(3); //simulating raspistill
