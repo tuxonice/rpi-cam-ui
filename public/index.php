@@ -46,8 +46,15 @@
       <!-- Example row of columns -->
       <div class="row">
         <div class="col-md-6">
+
+
           <h2>Preview</h2>
           <img id="live-image-placeholder" src="http://placehold.it/450x450" class="img-responsive" alt="Responsive image">
+          <h2>Shell script</h2>
+          <div class="form-group">
+            <textarea class="form-control" id="shellScript" rows="8"></textarea>
+          </div>
+
 
         </div>
         <div class="col-md-6">
@@ -69,18 +76,18 @@
 
     	<div class="form-group">
     		<label for="width">Image Width</label>
-    		<input type="text" class="form-control" id="width" name="with">
-    		<p class="help-block">Example block-level help text here.</p>
+    		<input type="text" class="form-control" id="width" name="width">
+    		<p class="help-block">Image width</p>
   		</div>
   		<div class="form-group">
     		<label for="height">Image Height</label>
     		<input type="text" class="form-control" id="height" name="height">
-    		<p class="help-block">Example block-level help text here.</p>
+    		<p class="help-block">Image height</p>
   		</div>
   		<div class="form-group">
     		<label for="rotation">Image Rotation</label>
     		<select class="form-control" id="rotation" name="rotation">
-  				<option value="0">0 Degrees</option>
+  				<option value="">No rotation</option>
   				<option value="90">90 Degrees</option>
   				<option value="180">180 Degrees</option>
   				<option value="270">270 Degrees</option>
@@ -99,53 +106,47 @@
   		</label>
 		</div>
 
-		<div class="checkbox">
-  		<label>
-    		<input type="checkbox" name="stats" id="stats" value="1">
-    		Display image statistics
-  		</label>
 		</div>
-    </div>
 
     <div role="tabpanel" class="tab-pane" id="effects" style="margin-top:20px; margin-bottom:20px;">
     	<div class="form-group">
     		<label for="exposure">Exposure mode</label>
     		<select class="form-control" id="exposure" name="exposure">
-    		<option value="auto">use automatic exposure mode</option>
+    		<option value="">Use automatic exposure mode (default)</option>
    			<option value="night">Select setting for night shooting</option>
    			<option value="nightpreview">nightpreview</option>
-   			<option value="backlight"> select setting for backlit subject</option>
-   			<option value="spotlight">spotlight</option>
-   			<option value="sports"> select setting for sports (fast shutter etc.)</option>
-   			<option value="snow"> select setting optimised for snowy scenery</option>
-   			<option value="beach"> select setting optimised for beach</option>
-   			<option value="verylong"> select setting for long exposures</option>
-   			<option value="fixedfps"> constrain fps to a fixed value</option>
-   			<option value="antishake"> antishake mode</option>
-   			<option value="fireworks"> select setting optimised for fireworks</option>
+   			<option value="backlight"> Select setting for backlit subject</option>
+   			<option value="spotlight">Spotlight</option>
+   			<option value="sports"> Select setting for sports (fast shutter etc.)</option>
+   			<option value="snow"> Select setting optimised for snowy scenery</option>
+   			<option value="beach"> Select setting optimised for beach</option>
+   			<option value="verylong"> Select setting for long exposures</option>
+   			<option value="fixedfps"> Constrain fps to a fixed value</option>
+   			<option value="antishake"> Antishake mode</option>
+   			<option value="fireworks"> Select setting optimised for fireworks</option>
 			</select>
-    		<p class="help-block">Example block-level help text here.</p>
+    		<p class="help-block">Set exposure mode (not all of these settings may be implemented, depending on camera tuning)</p>
   		</div>
   		<div class="form-group">
     		<label for="awb">Automatic White Balance (AWB) mode</label>
     		<select class="form-control" name="awb" id="awb">
-    		<option value="auto">automatic mode (default)</option>
-    		<option value="off">turn off white balance calculation</option>
-    		<option value="sun">sunny mode (between 5000K and 6500K)</option>
-    		<option value="cloud">cloudy mode (between 6500K and 12000K)</option>
-    		<option value="shade">shade mode</option>
-    		<option value="tungsten">tungsten lighting mode (between 2500K and 3500K)</option>
-    		<option value="fluorescent">fluorescent lighting mode (between 2500K and 4500K)</option>
-    		<option value="incandescent">incandescent lighting mode</option>
-    		<option value="flash">flash mode</option>
-    		<option value="horizon">horizon mode</option>
+    		<option value="">Automatic mode (default)</option>
+    		<option value="off">Turn off white balance calculation</option>
+    		<option value="sun">Sunny mode (between 5000K and 6500K)</option>
+    		<option value="cloud">Cloudy mode (between 6500K and 12000K)</option>
+    		<option value="shade">Shade mode</option>
+    		<option value="tungsten">Tungsten lighting mode (between 2500K and 3500K)</option>
+    		<option value="fluorescent">Fluorescent lighting mode (between 2500K and 4500K)</option>
+    		<option value="incandescent">Incandescent lighting mode</option>
+    		<option value="flash">Flash mode</option>
+    		<option value="horizon">Horizon mode</option>
     		</select>
     		<p class="help-block">Modes for which colour temperature ranges (K) are available have these settings in brackets</p>
   		</div>
   		<div class="form-group">
     		<label for="imxfx">Image effect</label>
     		<select class="form-control" name="imxfx" id="imxfx">
-    		<option value="none">No effect (default)</option>
+    		<option value="">No effect (default)</option>
     		<option value="negative">Invert the image colours</option>
     		<option value="solarise">Solarise the image</option>
     		<option value="posterise">Posterise the image</option>
@@ -180,7 +181,7 @@
           <?php for($i=-100; $i<=-1; $i++){ ?>
           <option value="<?php echo($i); ?>"><?php echo($i); ?></option>
           <?php } ?>
-          <option value="0" selected="selected">0</option>
+          <option value="" selected="selected">0</option>
           <?php for($i=1; $i<=100; $i++){ ?>
           <option value="<?php echo($i); ?>"><?php echo($i); ?></option>
           <?php } ?>
@@ -194,7 +195,7 @@
         <?php for($i=-100; $i<=-1; $i++){ ?>
         <option value="<?php echo($i); ?>"><?php echo($i); ?></option>
         <?php } ?>
-        <option value="0" selected="selected">0</option>
+        <option value="" selected="selected">0</option>
         <?php for($i=1; $i<=100; $i++){ ?>
         <option value="<?php echo($i); ?>"><?php echo($i); ?></option>
         <?php } ?>
@@ -208,7 +209,7 @@
           <?php for($i=0; $i<=49; $i++){ ?>
           <option value="<?php echo($i); ?>"><?php echo($i); ?></option>
           <?php } ?>
-          <option value="50" selected="selected">50</option>
+          <option value="" selected="selected">50</option>
           <?php for($i=51; $i<=100; $i++){ ?>
           <option value="<?php echo($i); ?>"><?php echo($i); ?></option>
           <?php } ?>
@@ -222,7 +223,7 @@
           <?php for($i=-100; $i<=-1; $i++){ ?>
           <option value="<?php echo($i); ?>"><?php echo($i); ?></option>
           <?php } ?>
-          <option value="0" selected="selected">0</option>
+          <option value="" selected="selected">0</option>
           <?php for($i=1; $i<=100; $i++){ ?>
           <option value="<?php echo($i); ?>"><?php echo($i); ?></option>
           <?php } ?>
@@ -233,7 +234,7 @@
       <div class="form-group">
         <label for="ISO">Capture ISO</label>
         <select class="form-control" name="ISO" id="ISO">
-          <option value="100" selected="selected">100</option>
+          <option value="" selected="selected">100</option>
           <?php for($i=110; $i<=800; $i+=10){ ?>
           <option value="<?php echo($i); ?>"><?php echo($i); ?></option>
           <?php } ?>
@@ -243,8 +244,16 @@
 
       <div class="form-group">
         <label for="ev">EV compensation</label>
-        <input type="text" class="form-control" id="ev" name="ev" value="0">
-        <p class="help-block">Sets the EV compensation of the image. Default is 0.</p>
+        <select class="form-control" name="ev" id="ev">
+          <?php for($i=-10; $i<=-1; $i++){ ?>
+          <option value="<?php echo($i); ?>"><?php echo($i); ?></option>
+          <?php } ?>
+          <option value="" selected="selected">0</option>
+          <?php for($i=1; $i<=10; $i++){ ?>
+          <option value="<?php echo($i); ?>"><?php echo($i); ?></option>
+          <?php } ?>
+        </select>
+        <p class="help-block">Set EV compensation (-10 - 10). Default is 0.</p>
       </div>
 
     </div>
@@ -254,12 +263,12 @@
 
     	<div class="form-group">
     		<label for="timeout">Total Duration (in seconds)</label>
-    		<input type="text" class="form-control" id="timeout" name="timeout" value="0">
+    		<input type="text" class="form-control" id="timeout" name="timeout" value="">
   		</div>
 
   		<div class="form-group">
     		<label for="timelapse">Image step (in seconds)</label>
-    		<input type="text" class="form-control" id="timelapse" name="timelapse" value="0">
+    		<input type="text" class="form-control" id="timelapse" name="timelapse" value="">
   		</div>
 
     </div>
@@ -290,45 +299,26 @@
     <script type="text/javascript">
     $(function(){
 
-
-
-
 $("#configData").submit(function(e) {
+     $("#live-image").button('loading');
 
-  var url = "ajax.php"; // the script where you handle the form input.
+console.log($("#configData").serialize());
 
-  console.log($("#configData").serialize());
-
-  $.ajax({
+     $.ajax({
          type: "POST",
-         url: url,
+         url: "ajax.php",
          data: $("#configData").serialize(), // serializes the form's elements.
          success: function(data)
          {
-             console.log(data); // show response from the php script.
+            $("#live-image-placeholder").attr('src',data.previewImage);
+            $("#live-image").button('reset');
+            $("#shellScript").val(data.shellContent);
          }
        });
 
   e.preventDefault(); // avoid to execute the actual submit of the form.
 });
 
-
-
-
-/*
-		$("#live-image").on('click',function(){
-		  var $this = $(this);
-		  $this.button('loading');
-  		  $.ajax({
-			  method: "POST",
-			  url: "ajax.php"
-			})
-			  .done(function( image ) {
-			    $("#live-image-placeholder").attr('src',image);
-			    $this.button('reset');
-			});
-		});
-*/
 
 		$('#myTabs a').click(function (e) {
 			  e.preventDefault()

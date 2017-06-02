@@ -1,39 +1,16 @@
 <?php
 require __DIR__.'/../vendor/autoload.php';
 
+//ini_set('display_errors',1);
+//error_reporting(E_ALL);
 
-/*
-  # Basic
-  with
-  height
-  rotation
-  hflip
-  vflip
-  stats
+$script = new tlab\shellScript($_POST);
+$shellContent = $script->output();
 
-  # Effects
-  exposure
-  awb
-  imxfx
+//$shellOutput = exec('sudo ./script.sh');
+//$previewImage = 'media/img.jpg?t='.uniqid();
+$shellOutput = '';
+$previewImage = 'http://lorempixel.com/450/450/?t='.uniqid();
 
-  # Transformations
-  sharpness
-  contrast
-  brightness
-  saturation
-  ISO
-  ev
-
-  # Timelapse
-  timeout
-  timelapse
-
-*/
-
-//$script = new tlab\shellScript($_POST);
-//$script->output();
-
-//sleep(3); //simulating raspistill
-echo('http://lorempixel.com/450/450/?t='.uniqid());
-//$output = exec('raspistill -o images/img.jpg');
-//echo('images/img.jpg?t='.uniqid());
+header('Content-Type: application/json');
+echo json_encode(array('shellContent'=>$shellContent,'shellOutput' => $shellOutput,'previewImage'=>$previewImage));

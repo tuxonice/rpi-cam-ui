@@ -140,28 +140,90 @@ class shellScript {
 
     const FILENAME = 'script.sh';
     const HEADER = '#!/bin/bash';
-
+    const TYPE_BOOLEAN = 1;
+    const TYPE_STRING = 2;
+    const TYPE_INT = 3;
+    const TYPE_FLOAT = 4;
 
     protected $validOptions = [];
-    protected $params;
+    protected $options = [];
     protected $commentLines = [];
 
 
-    public function __construct($params)
+    public function __construct($options)
     {
-        $this->params = $params;
         $this->init();
+        $this->parseOptions($options);
     }
 
     /**
-     * $this->validOptions[{switch}] = [{switch},{description}, {possible values}];
+     * $this->validOptions[{switch}] = [{switch},{description}];
+     * # Basic
+     * with (w)
+     * height (h)
+     * rotation (rot)
+     * hflip (hf)
+     * vflip (vf)
+     *
+     * # Effects
+     * exposure (ex)
+     * awb (awb)
+     * imxfx (ifx)
+     *
+     * # Transformations
+     * sharpness (sh)
+     * contrast (co)
+     * brightness (br)
+     * saturation (sa)
+     * ISO (ISO)
+     * ev (ev)
+     *
+     * # Timelapse
+     * timeout (t)
+     * timelapse (tl)
      */
     protected function init()
     {
-        $this->validOptions['hf'] = ['hflip','Set horizontal flip', null];
-        $this->validOptions['vf'] = ['vflip','Set vertical flip', null];
-        $this->validOptions['rot'] = ['rotation','Set image rotation', [0,90,180,270]];
-        $this->validOptions['sh'] = ['sharpness','Set image sharpness', [-100,100]];   
+        $this->validOptions['width'] = ['w','Set image width',self::TYPE_INT];
+        $this->validOptions['height'] = ['h','Set image height',self::TYPE_INT];
+        $this->validOptions['rotation'] = ['rot','Set image rotation',self::TYPE_INT];
+        $this->validOptions['hflip'] = ['hf','Set horizontal flip',self::TYPE_BOOLEAN];
+        $this->validOptions['vflip'] = ['vf','Set vertical flip',self::TYPE_BOOLEAN];
+        $this->validOptions['exposure'] = ['ex','Set exposure mode',self::TYPE_STRING];
+        $this->validOptions['awb'] = ['awb','Set Automatic White Balance (AWB) mode',self::TYPE_STRING];
+        $this->validOptions['imxfx'] = ['ifx','Set image effect',self::TYPE_STRING];
+        $this->validOptions['sharpness'] = ['sh','Set image sharpness',self::TYPE_INT];
+        $this->validOptions['contrast'] = ['co','Set image contrast',self::TYPE_INT];
+        $this->validOptions['brightness'] = ['br','Set image brightness',self::TYPE_INT];
+        $this->validOptions['saturation'] = ['sa','Set image saturation',self::TYPE_INT];
+        $this->validOptions['ISO'] = ['ISO','Set capture ISO',self::TYPE_INT];
+        $this->validOptions['ev'] = ['ev','Set EV compensation',self::TYPE_INT];
+    }
+
+
+    protected function parseOptions($options)
+    {
+        if(empty($options)) {
+		       return;
+	      }
+
+         foreach($options as $option=>$value) {
+          $value = trim($value);
+          if(isset($this->validOptions[$option])) {
+            $optionType = $this->validOptions[$option][2];
+            if($optionType == self::TYPE_BOOLEAN) {
+              $this->options[] = '-'.$this->validOptions[$option][0];
+              $this->commentLines[] = '# '.$this->validOptions[$option][1];
+            } else {
+              if($value != '') {
+                  $this->options[] = '-'.$this->validOptions[$option][0].' '.$value;
+                  $this->commentLines[] = '# '.$this->validOptions[$option][1].': '.$value;
+              }
+
+            }
+
+          }
+        }
     }
 
     /**
@@ -169,52 +231,26 @@ class shellScript {
     **/
     protected function createContent()
     {
-
-        $command = [];
-        foreach($this->params as $option=>$value) {
-
-            if(($parsedOption = $this->parseOption($option,$value)) !== false) {
-                $command[] = $parsedOption;
-                $this->commentLines[] = '# '.$this->validOptions[$option][1];
-            }
-
+        $command = 'raspistill ';
+        foreach($this->options as $option) {
+              $command .= $option.' ';
         }
-
-        return 'raspistill '.implode(' ', $command).' -o img.jpg';
-
-
-
-    }
-
-    protected function parseOption($option, $value)
-    {
-        if(!isset($this->validOptions[$option])) {
-            return false;
-        }
-
-        //This option dont have values
-        if(is_null($this->validOptions[$option][2])) {
-            return '-'.$option;
-        }
-
-
-        return '-'.$option.' '.$value;
+        return $command.' -o media/img.jpg';
     }
 
 
     public function output()
     {
+        $shellContent = '';
         $fp = fopen(self::FILENAME,'w');
         if ($fp) {
-           fwrite($fp, self::HEADER);
-           fwrite($fp, "\n\n");
-           fwrite($fp, $this->createContent());
-           fwrite($fp, "\n\n");
-           fwrite($fp, implode("\n",$this->commentLines));
-           fwrite($fp, "\n\n");
+           $shellContent .= self::HEADER."\n\n";
+           $shellContent .= $this->createContent()."\n\n";
+           $shellContent .= implode("\n",$this->commentLines)."\n\n";
+           fwrite($fp, $shellContent);
            fclose($fp);
         }
+        return $shellContent;
     }
-
 
 }

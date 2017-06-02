@@ -1,8 +1,7 @@
 #!/bin/bash
 
-raspistill -hf -rot 90 -vf -o img.jpg
+raspistill -rot 90 -hf  -o media/img.jpg
 
+# Set image rotation: 90
 # Set horizontal flip
-# Set image rotation
-# Set vertical flip
 
