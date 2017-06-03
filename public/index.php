@@ -49,7 +49,7 @@
 
 
           <h2>Preview</h2>
-          <img id="live-image-placeholder" src="http://placehold.it/450x450" class="img-responsive" alt="Responsive image">
+          <img id="live-image-placeholder" src="http://placehold.it/550x450" class="img-responsive" alt="Responsive image">
           <h2>Shell script</h2>
           <div class="form-group">
             <textarea class="form-control" id="shellScript" rows="8"></textarea>
