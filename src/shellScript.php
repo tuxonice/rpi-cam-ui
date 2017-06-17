@@ -144,16 +144,19 @@ class shellScript {
     const TYPE_STRING = 2;
     const TYPE_INT = 3;
     const TYPE_FLOAT = 4;
+    const LOCK_FILENAME = './work/running.lock';
 
     protected $validOptions = [];
     protected $options = [];
     protected $commentLines = [];
     protected $timeout = null;
     protected $timelapse = null;
+    protected $demoMode = false;
 
 
-    public function __construct($options)
+    public function __construct($options, $demoMode = true)
     {
+		$this->demoMode = $demoMode;
         $this->init();
         $this->parseOptions($options);
     }
@@ -249,6 +252,11 @@ class shellScript {
         foreach($this->options as $option) {
               $command .= $option.' ';
         }
+        
+        if($this->isTimelapseScript()) {
+			return $command.' -o media/img-%05d.jpg';
+		} 
+        
         return $command.' -o media/img.jpg';
     }
 
@@ -297,21 +305,62 @@ class shellScript {
 		return false;
 	}
 
+	protected function createLockFile($data)
+	{
+		if(self::checkLockFile()) {
+			return false;
+		}
+		
+		$contentSize = file_put_contents(self::LOCK_FILENAME,serialize($data));
+		
+		if($contentSize === false) {
+			return false;
+		}
+		
+		return true;
+	}
 
+
+	public static function checkLockFile()
+	{
+		return file_exists(self::LOCK_FILENAME);
+	}
+	
+	
+	public static function setDateTime()
+	{
+		//TODO: set date/time by commandline
+		# date +%T -s "10:13:13"
+		# date +%Y%m%d -s "20081128"
+	}
+	
+	
+	public static function getDateTime()
+	{
+		//TODO: get date/time from raspberry
+	}
+	
+	
+	
 	public function executeScript()
 	{
 		$nImages = $this->getTimelapseImageCount();
-		
-		
-		
 		$commandLine = $this->getCommandLine();
-		//$shellOutput = exec($commandLine);
-		//$previewImage = 'media/img.jpg?t='.uniqid();
-		sleep(1);
-		$shellOutput = '';
-		$previewImage = 'http://lorempixel.com/550/450/?t='.uniqid();
 		
-		return array($shellOutput, $previewImage);
+		$info = 'Your timelapse just started. Will end in 3 hours';
+		$status = 'info'; //info, success, warning, danger
+		$this->createLockFile(array($info, $status));
+		
+		if($this->demoMode) {
+			sleep(1);
+			$shellOutput = '';
+			$previewImage = 'http://lorempixel.com/550/450/?t='.uniqid();
+		} else {
+			$shellOutput = exec($commandLine);
+			$previewImage = 'media/img.jpg?t='.uniqid();
+		}
+		
+		return array($shellOutput, $previewImage, $info, $status);
 	}
 
 

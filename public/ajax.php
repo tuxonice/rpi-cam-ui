@@ -6,7 +6,7 @@ require __DIR__.'/../vendor/autoload.php';
 
 $script = new tlab\shellScript($_POST);
 $shellContent = $script->saveScript();
-list($shellOutput, $previewImage) = $script->executeScript();
+list($shellOutput, $previewImage, $info, $status) = $script->executeScript();
 
 header('Content-Type: application/json');
-echo json_encode(array('shellContent'=>$shellContent,'shellOutput' => $shellOutput,'previewImage'=>$previewImage));
+echo json_encode(array('shellContent'=>$shellContent,'shellOutput' => $shellOutput,'previewImage'=>$previewImage, 'info'=>$info, 'status' => $status));

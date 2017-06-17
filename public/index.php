@@ -273,6 +273,7 @@
     		<input type="text" class="form-control" id="timelapse" name="timelapse" value="">
   		</div>
   		
+  		
   		<div style="margin-top:10px;"><button type="button" class="btn btn-primary btn-lg " id="run-timelapse"
 			data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Timelapse running">Run Timelapse</button>
 		</div>	
@@ -296,6 +297,12 @@
 		  </form>
        </div>
       </div>
+      
+      <div class="row">
+        <div class="col-md-12">
+        		<div id="info-box" class="alert alert-success" role="alert" style="margin-top:20px"></div>
+</div>
+</div>
       
       <hr>
       
@@ -346,6 +353,9 @@ console.log($("#configData").serialize());
             $("#live-image-placeholder").attr('src',data.previewImage);
             $("#live-image").button('reset');
             $("#shellScript").val(data.shellContent);
+            
+            $("#info-box").removeClass().addClass("alert").addClass("alert-"+data.status).html(data.info).show();
+            
          }
        });
 
