@@ -148,6 +148,8 @@ class shellScript {
     protected $validOptions = [];
     protected $options = [];
     protected $commentLines = [];
+    protected $timeout = null;
+    protected $timelapse = null;
 
 
     public function __construct($options)
@@ -198,6 +200,8 @@ class shellScript {
         $this->validOptions['saturation'] = ['sa','Set image saturation',self::TYPE_INT];
         $this->validOptions['ISO'] = ['ISO','Set capture ISO',self::TYPE_INT];
         $this->validOptions['ev'] = ['ev','Set EV compensation',self::TYPE_INT];
+        $this->validOptions['timeout'] = ['t','Time before takes picture and shuts down (miliseconds)',self::TYPE_INT];
+        $this->validOptions['timelapse'] = ['tl','Timelapse mode (miliseconds)',self::TYPE_INT];
     }
 
 
@@ -218,12 +222,22 @@ class shellScript {
               if($value != '') {
                   $this->options[] = '-'.$this->validOptions[$option][0].' '.$value;
                   $this->commentLines[] = '# '.$this->validOptions[$option][1].': '.$value;
+        
+				  //Calc for the number of images 
+                  if($option == 'timeout') {
+					  $this->timeout = (int)$value;
+				  }
+				  if($option == 'timelapse') {
+					  $this->timelapse = (int)$value;
+				  }
               }
 
             }
 
           }
         }
+        
+		
     }
 
     /**
@@ -239,7 +253,7 @@ class shellScript {
     }
 
 
-    public function output()
+    public function saveScript()
     {
         $shellContent = '';
         $fp = fopen(self::FILENAME,'w');
@@ -252,5 +266,53 @@ class shellScript {
         }
         return $shellContent;
     }
+    
+    
+    protected function getCommandLine()
+    {
+		
+		if($this->isTimelapseScript()) {
+			return 'sudo ./script.sh &';
+		}
+		
+		return 'sudo ./script.sh';
+	}
+	
+	protected function getTimelapseImageCount()
+	{
+		if($this->timeout && $this->timelapse) {
+			return ceil($this->timeout / $this->timelapse);
+		}
+		
+		return 0;
+	}
+	
+	
+	protected function isTimelapseScript()
+	{
+		if($this->timeout && $this->timelapse) {
+			return true;
+		}
+		
+		return false;
+	}
+
+
+	public function executeScript()
+	{
+		$nImages = $this->getTimelapseImageCount();
+		
+		
+		
+		$commandLine = $this->getCommandLine();
+		//$shellOutput = exec($commandLine);
+		//$previewImage = 'media/img.jpg?t='.uniqid();
+		sleep(1);
+		$shellOutput = '';
+		$previewImage = 'http://lorempixel.com/550/450/?t='.uniqid();
+		
+		return array($shellOutput, $previewImage);
+	}
+
 
 }

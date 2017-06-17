@@ -50,16 +50,17 @@
 
           <h2>Preview</h2>
           <img id="live-image-placeholder" src="http://placehold.it/550x450" class="img-responsive" alt="Responsive image">
-          <h2>Shell script</h2>
-          <div class="form-group">
-            <textarea class="form-control" id="shellScript" rows="8"></textarea>
-          </div>
-
+          
+          <div style="margin-top:10px;"><button type="button" class="btn btn-primary btn-lg " id="live-image"
+			data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Getting Image">Preview Image</button>
+		</div>	
+          
 
         </div>
         <div class="col-md-6">
           <h2>Configuration</h2>
         <form id="configData">
+			<input type="hidden" name="run-in-background" id="run-in-background" value="0"/>
           <div>
 
   <!-- Nav tabs -->
@@ -67,7 +68,8 @@
     <li role="presentation" class="active"><a href="#basic" aria-controls="basic" role="tab" data-toggle="tab">Basic</a></li>
     <li role="presentation"><a href="#effects" aria-controls="effects" role="tab" data-toggle="tab">Effects</a></li>
     <li role="presentation"><a href="#transformations" aria-controls="transformations" role="tab" data-toggle="tab">Transformations</a></li>
-    <li role="presentation"><a href="#timelapse" aria-controls="timelapse" role="tab" data-toggle="tab">Timelapse</a></li>
+    <li role="presentation"><a href="#shell" aria-controls="shell" role="tab" data-toggle="tab">Shell Script</a></li>
+    <li role="presentation"><a href="#timelapse-tab" aria-controls="timelapse-tab" role="tab" data-toggle="tab">Timelapse</a></li>
   </ul>
 
   <!-- Tab panes -->
@@ -259,29 +261,44 @@
     </div>
 
 
-    <div role="tabpanel" class="tab-pane" id="timelapse" style="margin-top:20px; margin-bottom:20px;">
+    <div role="tabpanel" class="tab-pane" id="timelapse-tab" style="margin-top:20px; margin-bottom:20px;">
 
     	<div class="form-group">
-    		<label for="timeout">Total Duration (in seconds)</label>
+    		<label for="timeout">Total Duration (in miliseconds)</label>
     		<input type="text" class="form-control" id="timeout" name="timeout" value="">
   		</div>
 
   		<div class="form-group">
-    		<label for="timelapse">Image step (in seconds)</label>
+    		<label for="timelapse">Image step (in miliseconds)</label>
     		<input type="text" class="form-control" id="timelapse" name="timelapse" value="">
   		</div>
+  		
+  		<div style="margin-top:10px;"><button type="button" class="btn btn-primary btn-lg " id="run-timelapse"
+			data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Timelapse running">Run Timelapse</button>
+		</div>	
+  		
+    </div>
+    
+    
+    <div role="tabpanel" class="tab-pane" id="shell" style="margin-top:20px; margin-bottom:20px;">
+
+    	  <div class="form-group">
+            <textarea class="form-control" id="shellScript" rows="8"></textarea>
+          </div>
 
     </div>
+    
   </div>
 
 </div>
-  			<button type="submit" class="btn btn-primary btn-lg " id="live-image"
-			data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Processing Image">Get Image</button>
+
+  			
 		  </form>
        </div>
       </div>
-
+      
       <hr>
+      
 
       <footer>
         <p></p>
@@ -298,6 +315,22 @@
     <script src="resources/assets/js/ie10-viewport-bug-workaround.js"></script>
     <script type="text/javascript">
     $(function(){
+
+$("#live-image").on('click', function(e) {
+	
+	$("#configData").submit();
+	
+	
+});
+
+
+$("#run-timelapse").on('click', function(e){
+	
+	$("#run-in-background").val('1');
+	$("#configData").submit();
+	
+});
+
 
 $("#configData").submit(function(e) {
      $("#live-image").button('loading');
@@ -318,6 +351,8 @@ console.log($("#configData").serialize());
 
   e.preventDefault(); // avoid to execute the actual submit of the form.
 });
+
+
 
 
 		$('#myTabs a').click(function (e) {
