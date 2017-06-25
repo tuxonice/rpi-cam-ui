@@ -1,3 +1,9 @@
+<?php
+require __DIR__.'/../vendor/autoload.php';
+
+$isTimelapseRunning = tlab\shellScript::checkLockFile();
+
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -38,16 +44,26 @@
             <span class="icon-bar"></span>
           </button>
           <a class="navbar-brand" href="#">Rasperry Pi Camera UI</a>
-        </div>
+        </div>        
       </div>
     </nav>
 
     <div class="container">
       <!-- Example row of columns -->
       <div class="row">
+      <div class="col-md-6">
+		  <div>Raspberry Time: <span id="serverTime"></span></div>
+		  </div>
+		  <div class="col-md-6">
+			  <div>Browser Time: <span id="browserTime"></span></div>
+		  </div>
+      </div>
+      
+      
+      <div class="row">
         <div class="col-md-6">
 
-
+		  
           <h2>Preview</h2>
           <img id="live-image-placeholder" src="http://placehold.it/550x450" class="img-responsive" alt="Responsive image">
           
@@ -58,6 +74,7 @@
 
         </div>
         <div class="col-md-6">
+		
           <h2>Configuration</h2>
         <form id="configData">
 			<input type="hidden" name="run-in-background" id="run-in-background" value="0"/>
@@ -301,8 +318,15 @@
       <div class="row">
         <div class="col-md-12">
         		<div id="info-box" class="alert alert-success" role="alert" style="margin-top:20px"></div>
-</div>
-</div>
+		</div>
+	  </div>
+	  <?php if($isTimelapseRunning) { ?>
+		<div class="row">
+			<div class="col-md-12">
+        		<div class="alert alert-danger" role="alert" style="margin-top:20px">There is a timelapse running</div>
+			</div>
+	    </div>
+	  <?php } ?>
       
       <hr>
       
@@ -321,7 +345,52 @@
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="resources/assets/js/ie10-viewport-bug-workaround.js"></script>
     <script type="text/javascript">
+		
+	var timeDiff = 3600;
+		
+	function startTime() {
+		var browserNow = new Date();
+		var h = browserNow.getHours();
+		var m = browserNow.getMinutes();
+		var s = browserNow.getSeconds();
+		m = checkTime(m);
+		s = checkTime(s);
+		$("#browserTime").html(h + ":" + m + ":" + s);
+		
+		
+		
+		
+		var serverNow = new Date();
+		var h = serverNow.getHours();
+		var m = serverNow.getMinutes();
+		var s = serverNow.getSeconds();
+		m = checkTime(m);
+		s = checkTime(s);
+		$("#serverTime").html(h + ":" + m + ":" + s);
+		
+		
+		
+		var t = setTimeout(startTime, 1000);
+	}
+	
+	function checkTime(i) {
+		if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
+		return i;
+	}	
+		
+		
     $(function(){
+		
+		
+		var serverNow = new Date(<?php echo(gmmktime()*1000); ?>);
+		var browserNow = new Date();
+		
+		
+		
+		console.log(browserNow.getUTCDate()+'/'+(browserNow.getUTCMonth()+1)+'/'+browserNow.getUTCFullYear()+' '+browserNow.getUTCHours()+':'+browserNow.getUTCMinutes()+':'+browserNow.getUTCSeconds()+' UTC');
+		console.log(serverNow.getUTCDate()+'/'+(serverNow.getUTCMonth()+1)+'/'+serverNow.getUTCFullYear()+' '+serverNow.getUTCHours()+':'+serverNow.getUTCMinutes()+':'+serverNow.getUTCSeconds()+' UTC');
+		
+		//startTime();
 
 $("#live-image").on('click', function(e) {
 	
@@ -348,13 +417,16 @@ console.log($("#configData").serialize());
          type: "POST",
          url: "ajax.php",
          data: $("#configData").serialize(), // serializes the form's elements.
-         success: function(data)
+         success: function(data, status, xhr)
          {
             $("#live-image-placeholder").attr('src',data.previewImage);
             $("#live-image").button('reset');
             $("#shellScript").val(data.shellContent);
             
             $("#info-box").removeClass().addClass("alert").addClass("alert-"+data.status).html(data.info).show();
+            
+            console.log(xhr.getAllResponseHeaders());
+            
             
          }
        });

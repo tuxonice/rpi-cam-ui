@@ -144,7 +144,7 @@ class shellScript {
     const TYPE_STRING = 2;
     const TYPE_INT = 3;
     const TYPE_FLOAT = 4;
-    const LOCK_FILENAME = './work/running.lock';
+    const LOCK_FILENAME = './running.lock';
 
     protected $validOptions = [];
     protected $options = [];
@@ -248,7 +248,8 @@ class shellScript {
     **/
     protected function createContent()
     {
-        $command = 'raspistill ';
+		
+		$command = 'raspistill ';
         foreach($this->options as $option) {
               $command .= $option.' ';
         }
@@ -257,7 +258,16 @@ class shellScript {
 			return $command.' -o media/img-%05d.jpg';
 		} 
         
-        return $command.' -o media/img.jpg';
+        if(!$this->demoMode){
+			return $command.' -o media/img.jpg';
+		}
+        
+        $command = '# '.$command.' -o media/img.jpg';
+        $command .= "\n";
+        $command .= "# Demo mode\n";
+        $command .= 'sleep 10s';
+        
+        return $command;
     }
 
 
@@ -267,8 +277,11 @@ class shellScript {
         $fp = fopen(self::FILENAME,'w');
         if ($fp) {
            $shellContent .= self::HEADER."\n\n";
+           $shellContent .= "touch ".self::LOCK_FILENAME."\n\n";          
            $shellContent .= $this->createContent()."\n\n";
            $shellContent .= implode("\n",$this->commentLines)."\n\n";
+           $shellContent .= "rm ".self::LOCK_FILENAME."\n\n";          
+           
            fwrite($fp, $shellContent);
            fclose($fp);
         }
@@ -296,6 +309,17 @@ class shellScript {
 	}
 	
 	
+	protected function getTimelapseTotalTime()
+	{
+		if($this->timeout && $this->timelapse) {
+			$s = round($this->timeout / 1000);
+			return sprintf('%02d:%02d:%02d', ($s/3600),($s/60%60), $s%60);
+		}
+		
+		return '';
+	}
+	
+	
 	protected function isTimelapseScript()
 	{
 		if($this->timeout && $this->timelapse) {
@@ -305,6 +329,7 @@ class shellScript {
 		return false;
 	}
 
+	/*
 	protected function createLockFile($data)
 	{
 		if(self::checkLockFile()) {
@@ -319,7 +344,7 @@ class shellScript {
 		
 		return true;
 	}
-
+	*/
 
 	public static function checkLockFile()
 	{
@@ -345,15 +370,15 @@ class shellScript {
 	public function executeScript()
 	{
 		$nImages = $this->getTimelapseImageCount();
+		$totalTime = $this->getTimelapseTotalTime();
 		$commandLine = $this->getCommandLine();
 		
-		$info = 'Your timelapse just started. Will end in 3 hours';
+		$info = 'A timelapse is running. Will end in '.$totalTime.' and generate '.$nImages.' images.';
 		$status = 'info'; //info, success, warning, danger
-		$this->createLockFile(array($info, $status));
+		
 		
 		if($this->demoMode) {
-			sleep(1);
-			$shellOutput = '';
+			$shellOutput = exec($commandLine);
 			$previewImage = 'http://lorempixel.com/550/450/?t='.uniqid();
 		} else {
 			$shellOutput = exec($commandLine);
