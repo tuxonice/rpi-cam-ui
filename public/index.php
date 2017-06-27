@@ -1,7 +1,11 @@
 <?php
 require __DIR__.'/../vendor/autoload.php';
 
-$isTimelapseRunning = tlab\shellScript::checkLockFile();
+
+if($isTimelapseRunning = tlab\shellScript::checkLockFile()) {
+	$lockFileContents = tlab\shellScript::getLockFileContents();
+}
+
 
 ?>
 <!DOCTYPE html>
@@ -67,9 +71,11 @@ $isTimelapseRunning = tlab\shellScript::checkLockFile();
           <h2>Preview</h2>
           <img id="live-image-placeholder" src="http://placehold.it/550x450" class="img-responsive" alt="Responsive image">
           
+          <?php if(!$isTimelapseRunning) { ?>
           <div style="margin-top:10px;"><button type="button" class="btn btn-primary btn-lg " id="live-image"
 			data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Getting Image">Preview Image</button>
-		</div>	
+		  </div>	
+			<?php } ?>
           
 
         </div>
@@ -77,7 +83,6 @@ $isTimelapseRunning = tlab\shellScript::checkLockFile();
 		
           <h2>Configuration</h2>
         <form id="configData">
-			<input type="hidden" name="run-in-background" id="run-in-background" value="0"/>
           <div>
 
   <!-- Nav tabs -->
@@ -290,10 +295,11 @@ $isTimelapseRunning = tlab\shellScript::checkLockFile();
     		<input type="text" class="form-control" id="timelapse" name="timelapse" value="">
   		</div>
   		
-  		
+  		<?php if(!$isTimelapseRunning) { ?>
   		<div style="margin-top:10px;"><button type="button" class="btn btn-primary btn-lg " id="run-timelapse"
 			data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Timelapse running">Run Timelapse</button>
-		</div>	
+		</div>
+		<?php } ?>	
   		
     </div>
     
@@ -301,7 +307,7 @@ $isTimelapseRunning = tlab\shellScript::checkLockFile();
     <div role="tabpanel" class="tab-pane" id="shell" style="margin-top:20px; margin-bottom:20px;">
 
     	  <div class="form-group">
-            <textarea class="form-control" id="shellScript" rows="8"></textarea>
+            <textarea class="form-control" id="shellScript" rows="8" readonly="readonly"></textarea>
           </div>
 
     </div>
@@ -320,10 +326,18 @@ $isTimelapseRunning = tlab\shellScript::checkLockFile();
         		<div id="info-box" class="alert alert-success" role="alert" style="margin-top:20px"></div>
 		</div>
 	  </div>
-	  <?php if($isTimelapseRunning) { ?>
+	  <?php 
+		if($isTimelapseRunning) { ?>
 		<div class="row">
 			<div class="col-md-12">
-        		<div class="alert alert-danger" role="alert" style="margin-top:20px">There is a timelapse running</div>
+        		<div class="alert alert-danger" role="alert" style="margin-top:20px">
+					There is a timelapse running<br/>
+					Start Time: <?php echo $lockFileContents['startTime']; ?><br/>
+					End Time: <?php echo $lockFileContents['endTime']; ?><br/>
+					Images: <?php echo $lockFileContents['imageNumber']; ?><br/>
+					Image Folder: <?php echo $lockFileContents['imageFolder']; ?><br/>
+					
+        		</div>
 			</div>
 	    </div>
 	  <?php } ?>

@@ -1,11 +1,15 @@
 #!/bin/bash
 
-touch ./running.lock
+mkdir ./media/20170627234240
 
-raspistill -t 1000000 -tl 1000  -o media/img-%05d.jpg
+echo "YTo0OntzOjk6InN0YXJ0VGltZSI7aToxNDk4NjAzMzYwO3M6NzoiZW5kVGltZSI7ZDoxNDk4NjAzNzIwO3M6MTE6ImltYWdlTnVtYmVyIjtkOjEyMDtzOjExOiJpbWFnZUZvbGRlciI7czoyMjoiLi9tZWRpYS8yMDE3MDYyNzIzNDI0MCI7fQ==" > ./running.lock
 
-# Time before takes picture and shuts down (miliseconds): 1000000
-# Timelapse mode (miliseconds): 1000
+# Demo mode
+sleep 10s
+# raspistill -t 360000 -tl 3000  -o media/img-%05d.jpg
+
+# Time before takes picture and shuts down (miliseconds): 360000
+# Timelapse mode (miliseconds): 3000
 
 rm ./running.lock
 

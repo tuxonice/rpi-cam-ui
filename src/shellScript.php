@@ -145,6 +145,7 @@ class shellScript {
     const TYPE_INT = 3;
     const TYPE_FLOAT = 4;
     const LOCK_FILENAME = './running.lock';
+    const BASE_IMG_FOLDER = './media';
 
     protected $validOptions = [];
     protected $options = [];
@@ -152,6 +153,7 @@ class shellScript {
     protected $timeout = null;
     protected $timelapse = null;
     protected $demoMode = false;
+    protected $imageFolder = null;
 
 
     public function __construct($options, $demoMode = true)
@@ -248,8 +250,14 @@ class shellScript {
     **/
     protected function createContent()
     {
+		if($this->demoMode) {
+			$command = "# Demo mode\n";
+			$command .= "sleep 10s\n";
+			$command .= '# raspistill ';
+		} else {
+			$command = 'raspistill ';
+		}
 		
-		$command = 'raspistill ';
         foreach($this->options as $option) {
               $command .= $option.' ';
         }
@@ -258,16 +266,7 @@ class shellScript {
 			return $command.' -o media/img-%05d.jpg';
 		} 
         
-        if(!$this->demoMode){
-			return $command.' -o media/img.jpg';
-		}
-        
-        $command = '# '.$command.' -o media/img.jpg';
-        $command .= "\n";
-        $command .= "# Demo mode\n";
-        $command .= 'sleep 10s';
-        
-        return $command;
+        return $command.' -o media/img.jpg';
     }
 
 
@@ -277,7 +276,8 @@ class shellScript {
         $fp = fopen(self::FILENAME,'w');
         if ($fp) {
            $shellContent .= self::HEADER."\n\n";
-           $shellContent .= "touch ".self::LOCK_FILENAME."\n\n";          
+           $shellContent .= "mkdir ".$this->getImageFolder()."\n\n";           
+           $shellContent .= "echo \"".$this->lockFileContents()."\" > ".self::LOCK_FILENAME."\n\n";
            $shellContent .= $this->createContent()."\n\n";
            $shellContent .= implode("\n",$this->commentLines)."\n\n";
            $shellContent .= "rm ".self::LOCK_FILENAME."\n\n";          
@@ -287,6 +287,36 @@ class shellScript {
         }
         return $shellContent;
     }
+    
+    
+    protected function getImageFolder()
+    {
+		if(is_null($this->imageFolder)) {
+			 $this->imageFolder = self::BASE_IMG_FOLDER.'/'.date("YmdHis");	
+		}
+		
+		return $this->imageFolder;
+	}
+    
+    
+    
+    protected function lockFileContents()
+    {
+		$startTime = time();
+		$endTime = $startTime + ceil($this->timeout / 1000);
+		$imageNumber = $this->getTimelapseImageCount();
+		$imageFolder = $this->getImageFolder();
+		
+		$fileContent = array(
+			'startTime' => $startTime,
+			'endTime' => $endTime,
+			'imageNumber' => $imageNumber,
+			'imageFolder' => $imageFolder,
+			);
+		
+		return base64_encode(serialize($fileContent));
+		
+	}
     
     
     protected function getCommandLine()
@@ -329,26 +359,30 @@ class shellScript {
 		return false;
 	}
 
-	/*
-	protected function createLockFile($data)
-	{
-		if(self::checkLockFile()) {
-			return false;
-		}
-		
-		$contentSize = file_put_contents(self::LOCK_FILENAME,serialize($data));
-		
-		if($contentSize === false) {
-			return false;
-		}
-		
-		return true;
-	}
-	*/
+	
 
 	public static function checkLockFile()
 	{
 		return file_exists(self::LOCK_FILENAME);
+	}
+	
+	
+	
+	public static function getLockFileContents()
+    {
+		
+		if(self::checkLockFile()) {
+			$fileContents = file_get_contents(self::LOCK_FILENAME);	
+			$data = unserialize(base64_decode($fileContents));
+			return $data;
+		}
+		
+		return array(
+			'startTime' => 0,
+			'endTime' => 0,
+			'imageNumber' => 0,
+			'imageFolder' => '',
+			);
 	}
 	
 	
