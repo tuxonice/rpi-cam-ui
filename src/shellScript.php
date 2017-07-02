@@ -154,11 +154,13 @@ class shellScript {
     protected $timelapse = null;
     protected $demoMode = false;
     protected $imageFolder = null;
+    protected $runType;
 
 
-    public function __construct($options, $demoMode = true)
+    public function __construct($options, $type = 'preview', $demoMode = true)
     {
 		$this->demoMode = $demoMode;
+		$this->runType = $type;
         $this->init();
         $this->parseOptions($options);
     }
@@ -225,16 +227,20 @@ class shellScript {
               $this->commentLines[] = '# '.$this->validOptions[$option][1];
             } else {
               if($value != '') {
-                  $this->options[] = '-'.$this->validOptions[$option][0].' '.$value;
-                  $this->commentLines[] = '# '.$this->validOptions[$option][1].': '.$value;
-        
-				  //Calc for the number of images 
-                  if($option == 'timeout') {
-					  $this->timeout = (int)$value;
+				  
+				  if($option == 'timeout') {
+					  $value = ((int)$value * 1000);
+					  $this->timeout = $value;
 				  }
 				  if($option == 'timelapse') {
-					  $this->timelapse = (int)$value;
+					  $value = ((int)$value * 1000);
+					  $this->timelapse = $value;
 				  }
+				  
+				  
+                  $this->options[] = '-'.$this->validOptions[$option][0].' '.$value;
+                  $this->commentLines[] = '# '.$this->validOptions[$option][1].': '.$value;
+				  
               }
 
             }
@@ -276,11 +282,16 @@ class shellScript {
         $fp = fopen(self::FILENAME,'w');
         if ($fp) {
            $shellContent .= self::HEADER."\n\n";
-           $shellContent .= "mkdir ".$this->getImageFolder()."\n\n";           
-           $shellContent .= "echo \"".$this->lockFileContents()."\" > ".self::LOCK_FILENAME."\n\n";
-           $shellContent .= $this->createContent()."\n\n";
-           $shellContent .= implode("\n",$this->commentLines)."\n\n";
-           $shellContent .= "rm ".self::LOCK_FILENAME."\n\n";          
+           if ($this->isTimelapseScript()) {
+			   $shellContent .= "mkdir ".$this->getImageFolder()."\n\n";           
+			   $shellContent .= "echo \"".$this->lockFileContents()."\" > ".self::LOCK_FILENAME."\n\n";
+			   $shellContent .= $this->createContent()."\n\n";
+			   $shellContent .= implode("\n",$this->commentLines)."\n\n";
+			   $shellContent .= "rm ".self::LOCK_FILENAME."\n\n";          
+		   } else {
+			   $shellContent .= $this->createContent()."\n\n";
+			   $shellContent .= implode("\n",$this->commentLines)."\n\n";
+		   }
            
            fwrite($fp, $shellContent);
            fclose($fp);
@@ -323,7 +334,7 @@ class shellScript {
     {
 		
 		if($this->isTimelapseScript()) {
-			return 'sudo ./script.sh &';
+			return 'sudo ./script.sh > /dev/null &';
 		}
 		
 		return 'sudo ./script.sh';
@@ -352,7 +363,7 @@ class shellScript {
 	
 	protected function isTimelapseScript()
 	{
-		if($this->timeout && $this->timelapse) {
+		if ($this->runType == 'timelapse') {
 			return true;
 		}
 		
@@ -386,40 +397,35 @@ class shellScript {
 	}
 	
 	
-	public static function setDateTime()
-	{
-		//TODO: set date/time by commandline
-		# date +%T -s "10:13:13"
-		# date +%Y%m%d -s "20081128"
-	}
-	
-	
-	public static function getDateTime()
-	{
-		//TODO: get date/time from raspberry
-	}
-	
-	
-	
 	public function executeScript()
 	{
-		$nImages = $this->getTimelapseImageCount();
-		$totalTime = $this->getTimelapseTotalTime();
+		if ($this->isTimelapseScript()) {
+			$nImages = $this->getTimelapseImageCount();
+			$totalTime = $this->getTimelapseTotalTime();
+			$info = 'A timelapse is running. Will end in '.$totalTime.' and generate '.$nImages.' images.';
+			$status = 'info'; //info, success, warning, danger
+			$type = 'timelapse';
+		} else {
+			$type = 'preview';
+			$nImages = 0;
+			$totalTime = 0;
+			$info = '';
+			$status = 'info';
+		}
+		
 		$commandLine = $this->getCommandLine();
-		
-		$info = 'A timelapse is running. Will end in '.$totalTime.' and generate '.$nImages.' images.';
-		$status = 'info'; //info, success, warning, danger
-		
+		exec($commandLine);
 		
 		if($this->demoMode) {
-			$shellOutput = exec($commandLine);
 			$previewImage = 'http://lorempixel.com/550/450/?t='.uniqid();
+		} elseif($this->isTimelapseScript()) {
+			$previewImage = 'media/img.jpg?t='.uniqid(); //TODO: timelapse running image
 		} else {
-			$shellOutput = exec($commandLine);
 			$previewImage = 'media/img.jpg?t='.uniqid();
 		}
 		
-		return array($shellOutput, $previewImage, $info, $status);
+		
+		return array($previewImage, $info, $status, $type);
 	}
 
 

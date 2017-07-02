@@ -83,6 +83,7 @@ if($isTimelapseRunning = tlab\shellScript::checkLockFile()) {
 		
           <h2>Configuration</h2>
         <form id="configData">
+			<input type="hidden" name="type" id="type" value="preview"/>
           <div>
 
   <!-- Nav tabs -->
@@ -286,12 +287,12 @@ if($isTimelapseRunning = tlab\shellScript::checkLockFile()) {
     <div role="tabpanel" class="tab-pane" id="timelapse-tab" style="margin-top:20px; margin-bottom:20px;">
 
     	<div class="form-group">
-    		<label for="timeout">Total Duration (in miliseconds)</label>
+    		<label for="timeout">Total Duration (in seconds)</label>
     		<input type="text" class="form-control" id="timeout" name="timeout" value="">
   		</div>
 
   		<div class="form-group">
-    		<label for="timelapse">Image step (in miliseconds)</label>
+    		<label for="timelapse">Image step (in seconds)</label>
     		<input type="text" class="form-control" id="timelapse" name="timelapse" value="">
   		</div>
   		
@@ -360,31 +361,28 @@ if($isTimelapseRunning = tlab\shellScript::checkLockFile()) {
     <script src="resources/assets/js/ie10-viewport-bug-workaround.js"></script>
     <script type="text/javascript">
 		
-	var timeDiff = 3600;
+	var timeDiff = 0;
 		
 	function startTime() {
+		
 		var browserNow = new Date();
 		var h = browserNow.getHours();
 		var m = browserNow.getMinutes();
-		var s = browserNow.getSeconds();
+		//var s = browserNow.getSeconds();
 		m = checkTime(m);
-		s = checkTime(s);
-		$("#browserTime").html(h + ":" + m + ":" + s);
+		//s = checkTime(s);
+		$("#browserTime").html(h + ":" + m);
 		
-		
-		
-		
-		var serverNow = new Date();
+		var serverNow = new Date(Math.floor(Date.now()) + (timeDiff * 1000));
 		var h = serverNow.getHours();
 		var m = serverNow.getMinutes();
-		var s = serverNow.getSeconds();
+		//var s = serverNow.getSeconds();
 		m = checkTime(m);
-		s = checkTime(s);
-		$("#serverTime").html(h + ":" + m + ":" + s);
+		//s = checkTime(s);
+		$("#serverTime").html(h + ":" + m);
 		
-		
-		
-		var t = setTimeout(startTime, 1000);
+		//Update click every 60 seconds
+		var t = setTimeout(startTime, 60000);
 	}
 	
 	function checkTime(i) {
@@ -395,61 +393,57 @@ if($isTimelapseRunning = tlab\shellScript::checkLockFile()) {
 		
     $(function(){
 		
+		timeDiff = Math.floor(Date.now() / 1000) - Math.floor(<?php echo(gmmktime()); ?>);
+		console.log(timeDiff);
 		
-		var serverNow = new Date(<?php echo(gmmktime()*1000); ?>);
-		var browserNow = new Date();
-		
-		
-		
-		console.log(browserNow.getUTCDate()+'/'+(browserNow.getUTCMonth()+1)+'/'+browserNow.getUTCFullYear()+' '+browserNow.getUTCHours()+':'+browserNow.getUTCMinutes()+':'+browserNow.getUTCSeconds()+' UTC');
-		console.log(serverNow.getUTCDate()+'/'+(serverNow.getUTCMonth()+1)+'/'+serverNow.getUTCFullYear()+' '+serverNow.getUTCHours()+':'+serverNow.getUTCMinutes()+':'+serverNow.getUTCSeconds()+' UTC');
-		
-		//startTime();
+		startTime();
 
-$("#live-image").on('click', function(e) {
-	
-	$("#configData").submit();
-	
-	
-});
+		$("#live-image").on('click', function(e) {
+			$("#type").val('preview');
+			$("#live-image").button('loading');
+			$("#configData").submit();
+			$("#live-image").button('reset');
+		});
 
 
-$("#run-timelapse").on('click', function(e){
-	
-	$("#run-in-background").val('1');
-	$("#configData").submit();
-	
-});
+		$("#run-timelapse").on('click', function(e){
+			
+			var timeout = $("#timeout").val();
+			var timelapse = $("#timelapse").val();
+			
+			if(timeout == '' || timelapse == '') {
+				alert('erro');
+				return;
+			}
+			
+			
+			$("#type").val('timelapse');
+			$("#configData").submit();
+		});
 
 
-$("#configData").submit(function(e) {
-     $("#live-image").button('loading');
+		$("#configData").submit(function(e) {
+			//console.log($("#configData").serialize());
+			$.ajax({
+				type: "POST",
+				url: "ajax.php",
+				data: $("#configData").serialize(), // serializes the form's elements.
+				success: function(data, status, xhr)
+				{
+					if(data.isTimelapseRunning) {
+						$("#info-box").removeClass().addClass("alert").addClass("alert-"+data.status).html(data.info).show(); 
+						return; 
+					}
+					$("#live-image-placeholder").attr('src',data.previewImage);
+					$("#shellScript").val(data.shellContent);
+					if(data.type == 'timelapse') {
+						$("#info-box").removeClass().addClass("alert").addClass("alert-"+data.status).html(data.info).show();          
+					}					
+				}
+			});
 
-console.log($("#configData").serialize());
-
-     $.ajax({
-         type: "POST",
-         url: "ajax.php",
-         data: $("#configData").serialize(), // serializes the form's elements.
-         success: function(data, status, xhr)
-         {
-            $("#live-image-placeholder").attr('src',data.previewImage);
-            $("#live-image").button('reset');
-            $("#shellScript").val(data.shellContent);
-            
-            $("#info-box").removeClass().addClass("alert").addClass("alert-"+data.status).html(data.info).show();
-            
-            console.log(xhr.getAllResponseHeaders());
-            
-            
-         }
-       });
-
-  e.preventDefault(); // avoid to execute the actual submit of the form.
-});
-
-
-
+			e.preventDefault(); // avoid to execute the actual submit of the form.
+		});
 
 		$('#myTabs a').click(function (e) {
 			  e.preventDefault()
