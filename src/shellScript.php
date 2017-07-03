@@ -269,7 +269,7 @@ class shellScript {
         }
         
         if($this->isTimelapseScript()) {
-			return $command.' -o media/img-%05d.jpg';
+			return $command.' -o '.$this->getImageFolder().'/img-%05d.jpg';
 		} 
         
         return $command.' -o media/img.jpg';

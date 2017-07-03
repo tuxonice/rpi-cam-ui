@@ -1,8 +1,6 @@
 <?php
-require __DIR__.'/../vendor/autoload.php';
+require 'config.php';
 
-//ini_set('display_errors',1);
-//error_reporting(E_ALL);
 if($isTimelapseRunning = tlab\shellScript::checkLockFile()) {
 	$info = 'A timelapse is running!';
 	$status = 'danger'; //info, success, warning, danger
@@ -14,7 +12,7 @@ if($isTimelapseRunning = tlab\shellScript::checkLockFile()) {
 
 $runType = (isset($_POST['type']) && $_POST['type'] == 'timelapse') ? 'timelapse' : 'preview';
 
-$script = new tlab\shellScript($_POST, $runType);
+$script = new tlab\shellScript($_POST, $runType, _APP_DEMO_MODE);
 $shellContent = $script->saveScript();
 list($previewImage, $info, $status, $type) = $script->executeScript();
 

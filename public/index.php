@@ -1,5 +1,5 @@
 <?php
-require __DIR__.'/../vendor/autoload.php';
+require 'config.php';
 
 
 if($isTimelapseRunning = tlab\shellScript::checkLockFile()) {
@@ -38,28 +38,30 @@ if($isTimelapseRunning = tlab\shellScript::checkLockFile()) {
 
   <body>
 
-    <nav class="navbar navbar-inverse navbar-fixed-top">
+	<nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container">
         <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
           <a class="navbar-brand" href="#">Rasperry Pi Camera UI</a>
         </div>        
       </div>
     </nav>
 
     <div class="container">
-      <!-- Example row of columns -->
+      
+      <?php if(_APP_DEMO_MODE) { ?>
+      <div class="row">
+		<div class="col-md-12" style="background-color:#ff9933; text-align:center; padding:5px 0">
+			Demo mode
+		</div>		  
+      </div>
+      <?php } ?>
+      
       <div class="row">
       <div class="col-md-6">
-		  <div>Raspberry Time: <span id="serverTime"></span></div>
+		  <div><b>Raspberry Time:</b> <span id="serverTime"></span></div>
 		  </div>
 		  <div class="col-md-6">
-			  <div>Browser Time: <span id="browserTime"></span></div>
+			  <div><b>Browser Time:</b> <span id="browserTime"></span></div>
 		  </div>
       </div>
       
@@ -333,8 +335,8 @@ if($isTimelapseRunning = tlab\shellScript::checkLockFile()) {
 			<div class="col-md-12">
         		<div class="alert alert-danger" role="alert" style="margin-top:20px">
 					There is a timelapse running<br/>
-					Start Time: <?php echo $lockFileContents['startTime']; ?><br/>
-					End Time: <?php echo $lockFileContents['endTime']; ?><br/>
+					Start Time: <?php echo date("H:i:s", $lockFileContents['startTime']); ?><br/>
+					End Time: <?php echo date("H:i:s", $lockFileContents['endTime']); ?><br/>
 					Images: <?php echo $lockFileContents['imageNumber']; ?><br/>
 					Image Folder: <?php echo $lockFileContents['imageFolder']; ?><br/>
 					
