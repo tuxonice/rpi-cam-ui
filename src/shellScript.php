@@ -416,10 +416,10 @@ class shellScript {
 		$commandLine = $this->getCommandLine();
 		exec($commandLine);
 		
-		if($this->demoMode) {
+		if($this->isTimelapseScript()) {
+			$previewImage = 'resources/images/timelapse-running.png';
+		} elseif($this->demoMode) {
 			$previewImage = 'http://lorempixel.com/550/450/?t='.uniqid();
-		} elseif($this->isTimelapseScript()) {
-			$previewImage = 'media/img.jpg?t='.uniqid(); //TODO: timelapse running image
 		} else {
 			$previewImage = 'media/img.jpg?t='.uniqid();
 		}

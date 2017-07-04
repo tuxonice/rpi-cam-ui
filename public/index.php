@@ -71,7 +71,14 @@ if($isTimelapseRunning = tlab\shellScript::checkLockFile()) {
 
 		  
           <h2>Preview</h2>
-          <img id="live-image-placeholder" src="http://placehold.it/550x450" class="img-responsive" alt="Responsive image">
+          <?php 
+			if($isTimelapseRunning) {
+				$img = 'timelapse-running.png';
+			} else {
+				$img = 'timelapse-splash.png';
+			}
+          ?>
+          <img id="live-image-placeholder" src="resources/images/<?php echo($img);  ?>" class="img-responsive" alt="Responsive image">
           
           <?php if(!$isTimelapseRunning) { ?>
           <div style="margin-top:10px;"><button type="button" class="btn btn-primary btn-lg " id="live-image"
@@ -395,7 +402,7 @@ if($isTimelapseRunning = tlab\shellScript::checkLockFile()) {
 		
     $(function(){
 		
-		timeDiff = Math.floor(Date.now() / 1000) - Math.floor(<?php echo(gmmktime()); ?>);
+		timeDiff = Math.floor(Date.now() / 1000) - Math.floor(<?php echo(time()); ?>);
 		console.log(timeDiff);
 		
 		startTime();
