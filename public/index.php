@@ -1,9 +1,8 @@
 <?php
 require 'config.php';
 
-
-if($isTimelapseRunning = tlab\shellScript::checkLockFile()) {
-	$lockFileContents = tlab\shellScript::getLockFileContents();
+if ($isTimelapseRunning = tlab\shellScript::checkLockFile()) {
+    $lockFileContents = tlab\shellScript::getLockFileContents();
 }
 
 
@@ -304,7 +303,32 @@ if($isTimelapseRunning = tlab\shellScript::checkLockFile()) {
     		<label for="timelapse">Image step (in seconds)</label>
     		<input type="text" class="form-control" id="timelapse" name="timelapse" value="">
   		</div>
-  		
+
+        <div class="checkbox">
+            <label>
+                <input name="process-video" id="process-video" type="checkbox" value="1" >
+                Process Video
+            </label>
+        </div>
+
+        <div class="form-group">
+            <label for="mencoder-vcodec">Codec</label>
+            <select class="form-control" name="mencoder-vcodec" id="mencoder-vcodec">
+                <option value="mpeg4">Mpeg 4</option>
+            </select>
+            <p class="help-block">Set Codec</p>
+        </div>
+
+        <div class="form-group">
+            <label for="mencoder-aspect">Video Aspect Ratio</label>
+            <select class="form-control" name="mencoder-aspect" id="mencoder-vcodec">
+                <option value="16/9">16/9</option>
+                <option value="4/3">4/3</option>
+            </select>
+            <p class="help-block">Video Aspect Ratio</p>
+        </div>
+
+  		//mencoder -nosound -ovc lavc -lavcopts vcodec=mpeg4:aspect=16/9:vbitrate=8000000 -vf scale=1920:1080 -o timelapse6.avi -mf type=jpeg:fps=8 mf://@stills.txt
   		<?php if(!$isTimelapseRunning) { ?>
   		<div style="margin-top:10px;"><button type="button" class="btn btn-primary btn-lg " id="run-timelapse"
 			data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Timelapse running">Run Timelapse</button>
@@ -409,18 +433,18 @@ if($isTimelapseRunning = tlab\shellScript::checkLockFile()) {
 
 		$("#live-image").on('click', function(e) {
 			$("#type").val('preview');
-			$("#live-image").button('loading');
+            $("#live-image").button('loading');
 			$("#configData").submit();
-			$("#live-image").button('reset');
 		});
 
 
 		$("#run-timelapse").on('click', function(e){
 			
-			var timeout = $("#timeout").val();
-			var timelapse = $("#timelapse").val();
+			let timeout = $("#timeout").val();
+			let timelapse = $("#timelapse").val();
+            $("#live-image").hide();
 			
-			if(timeout == '' || timelapse == '') {
+			if(timeout === '' || timelapse === '') {
 				alert('erro');
 				return;
 			}
@@ -432,7 +456,7 @@ if($isTimelapseRunning = tlab\shellScript::checkLockFile()) {
 
 
 		$("#configData").submit(function(e) {
-			//console.log($("#configData").serialize());
+			e.preventDefault(); // avoid to execute the actual submit of the form.
 			$.ajax({
 				type: "POST",
 				url: "ajax.php",
@@ -445,13 +469,12 @@ if($isTimelapseRunning = tlab\shellScript::checkLockFile()) {
 					}
 					$("#live-image-placeholder").attr('src',data.previewImage);
 					$("#shellScript").val(data.shellContent);
-					if(data.type == 'timelapse') {
+					if(data.type === 'timelapse') {
 						$("#info-box").removeClass().addClass("alert").addClass("alert-"+data.status).html(data.info).show();          
-					}					
+					}
+                    $("#live-image").button('reset');
 				}
 			});
-
-			e.preventDefault(); // avoid to execute the actual submit of the form.
 		});
 
 		$('#myTabs a').click(function (e) {
