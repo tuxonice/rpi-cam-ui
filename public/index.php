@@ -209,86 +209,40 @@ if ($isTimelapseRunning = tlab\shellScript::checkLockFile()) {
     <div role="tabpanel" class="tab-pane" id="transformations" style="margin-top:20px; margin-bottom:20px;">
 
       <div class="form-group">
-        <label for="sharpness">Image sharpness</label>
-        <select class="form-control" name="sharpness" id="sharpness">
-          <?php for($i=-100; $i<=-1; $i++){ ?>
-          <option value="<?php echo($i); ?>"><?php echo($i); ?></option>
-          <?php } ?>
-          <option value="" selected="selected">0</option>
-          <?php for($i=1; $i<=100; $i++){ ?>
-          <option value="<?php echo($i); ?>"><?php echo($i); ?></option>
-          <?php } ?>
-        </select>
+        <label for="sharpness">Image sharpness</label> <span id="sharpness-value"> 0 </span>
+        <input type="range" min="-100" max="100" class="form-control-range" name="sharpness" id="sharpness" value="0">
         <p class="help-block">Sets the sharpness of the image (-100 - 100). 0 is the default.</p>
       </div>
 
       <div class="form-group">
-        <label for="contrast">Image contrast</label>
-      <select class="form-control" name="contrast" id="contrast">
-        <?php for($i=-100; $i<=-1; $i++){ ?>
-        <option value="<?php echo($i); ?>"><?php echo($i); ?></option>
-        <?php } ?>
-        <option value="" selected="selected">0</option>
-        <?php for($i=1; $i<=100; $i++){ ?>
-        <option value="<?php echo($i); ?>"><?php echo($i); ?></option>
-        <?php } ?>
-      </select>
+        <label for="contrast">Image contrast</label> <span id="contrast-value"> 0 </span>
+		<input type="range" min="-100" max="100" class="form-control-range" name="contrast" id="contrast" value="0">
         <p class="help-block">Sets the contrast of the image (-100 - 100). 0 is the default.</p>
       </div>
 
       <div class="form-group">
-        <label for="brightness">Image brightness</label>
-        <select class="form-control" name="brightness" id="brightness">
-          <?php for($i=0; $i<=49; $i++){ ?>
-          <option value="<?php echo($i); ?>"><?php echo($i); ?></option>
-          <?php } ?>
-          <option value="" selected="selected">50</option>
-          <?php for($i=51; $i<=100; $i++){ ?>
-          <option value="<?php echo($i); ?>"><?php echo($i); ?></option>
-          <?php } ?>
-        </select>
+        <label for="brightness">Image brightness </label> <span id="brightness-value"> 50 </span>
+        <input type="range" min="0" max="100" class="form-control-range" name="brightness" id="brightness" value="50">
         <p class="help-block">Sets the brightness of the image. 50 is the default. 0 is black, 100 is white.</p>
       </div>
 
       <div class="form-group">
-        <label for="saturation">Image saturation</label>
-        <select class="form-control" name="saturation" id="saturation">
-          <?php for($i=-100; $i<=-1; $i++){ ?>
-          <option value="<?php echo($i); ?>"><?php echo($i); ?></option>
-          <?php } ?>
-          <option value="" selected="selected">0</option>
-          <?php for($i=1; $i<=100; $i++){ ?>
-          <option value="<?php echo($i); ?>"><?php echo($i); ?></option>
-          <?php } ?>
-        </select>
+        <label for="saturation">Image saturation</label> <span id="saturation-value"> 0 </span>
+		<input type="range" min="-100" max="100" class="form-control-range" name="saturation" id="saturation" value="0">
         <p class="help-block">Sets the colour saturation of the image (-100 - 100). 0 is the default.</p>
       </div>
 
-      <div class="form-group">
-        <label for="ISO">Capture ISO</label>
-        <select class="form-control" name="ISO" id="ISO">
-          <option value="" selected="selected">100</option>
-          <?php for($i=110; $i<=800; $i+=10){ ?>
-          <option value="<?php echo($i); ?>"><?php echo($i); ?></option>
-          <?php } ?>
-        </select>
+	  <div class="form-group">
+        <label for="ISO">Capture ISO</label> <span id="ISO-value"> 100 </span>
+        <input type="range" min="100" max="800" class="form-control-range" name="ISO" id="ISO" value="100" step="10">
         <p class="help-block">Sets the ISO to be used for captures (100 - 800).</p>
       </div>
 
-      <div class="form-group">
-        <label for="ev">EV compensation</label>
-        <select class="form-control" name="ev" id="ev">
-          <?php for($i=-10; $i<=-1; $i++){ ?>
-          <option value="<?php echo($i); ?>"><?php echo($i); ?></option>
-          <?php } ?>
-          <option value="" selected="selected">0</option>
-          <?php for($i=1; $i<=10; $i++){ ?>
-          <option value="<?php echo($i); ?>"><?php echo($i); ?></option>
-          <?php } ?>
-        </select>
+	  <div class="form-group">
+        <label for="ev">EV compensation</label> <span id="ev-value"> 0 </span>
+        <input type="range" min="-10" max="10" class="form-control-range" name="ev" id="ev" value="0">
         <p class="help-block">Set EV compensation (-10 - 10). Default is 0.</p>
       </div>
-
     </div>
 
 
@@ -392,96 +346,6 @@ if ($isTimelapseRunning = tlab\shellScript::checkLockFile()) {
     <script src="resources/js/bootstrap.min.js"></script>
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="resources/assets/js/ie10-viewport-bug-workaround.js"></script>
-    <script type="text/javascript">
-		
-	var timeDiff = 0;
-		
-	function startTime() {
-		
-		var browserNow = new Date();
-		var h = browserNow.getHours();
-		var m = browserNow.getMinutes();
-		//var s = browserNow.getSeconds();
-		m = checkTime(m);
-		//s = checkTime(s);
-		$("#browserTime").html(h + ":" + m);
-		
-		var serverNow = new Date(Math.floor(Date.now()) + (timeDiff * 1000));
-		var h = serverNow.getHours();
-		var m = serverNow.getMinutes();
-		//var s = serverNow.getSeconds();
-		m = checkTime(m);
-		//s = checkTime(s);
-		$("#serverTime").html(h + ":" + m);
-		
-		//Update click every 60 seconds
-		var t = setTimeout(startTime, 60000);
-	}
-	
-	function checkTime(i) {
-		if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
-		return i;
-	}	
-		
-		
-    $(function(){
-		
-		timeDiff = Math.floor(Date.now() / 1000) - Math.floor(<?php echo(time()); ?>);
-		console.log(timeDiff);
-		
-		startTime();
-
-		$("#live-image").on('click', function(e) {
-			$("#type").val('preview');
-            $("#live-image").button('loading');
-			$("#configData").submit();
-		});
-
-
-		$("#run-timelapse").on('click', function(e){
-			
-			let timeout = $("#timeout").val();
-			let timelapse = $("#timelapse").val();
-            $("#live-image").hide();
-			
-			if(timeout === '' || timelapse === '') {
-				alert('erro');
-				return;
-			}
-			
-			
-			$("#type").val('timelapse');
-			$("#configData").submit();
-		});
-
-
-		$("#configData").submit(function(e) {
-			e.preventDefault(); // avoid to execute the actual submit of the form.
-			$.ajax({
-				type: "POST",
-				url: "ajax.php",
-				data: $("#configData").serialize(), // serializes the form's elements.
-				success: function(data, status, xhr)
-				{
-					if(data.isTimelapseRunning) {
-						$("#info-box").removeClass().addClass("alert").addClass("alert-"+data.status).html(data.info).show(); 
-						return; 
-					}
-					$("#live-image-placeholder").attr('src',data.previewImage);
-					$("#shellScript").val(data.shellContent);
-					if(data.type === 'timelapse') {
-						$("#info-box").removeClass().addClass("alert").addClass("alert-"+data.status).html(data.info).show();          
-					}
-                    $("#live-image").button('reset');
-				}
-			});
-		});
-
-		$('#myTabs a').click(function (e) {
-			  e.preventDefault()
-			  $(this).tab('show')
-			})
-    });
-    </script>
+	<script src="resources/js/index.js"></script>
   </body>
 </html>

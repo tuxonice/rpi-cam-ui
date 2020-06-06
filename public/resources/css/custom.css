@@ -4,3 +4,10 @@ body {
 }
 
 #info-box {display:none;}
+
+#brightness-value {color:blue; font-weight: 600;}
+#contrast-value {color:blue; font-weight: 600;}
+#sharpness-value {color:blue; font-weight: 600;}
+#saturation-value {color:blue; font-weight: 600;}
+#ISO-value {color:blue; font-weight: 600;}
+#ev-value {color:blue; font-weight: 600;}
