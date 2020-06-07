@@ -1,10 +1,9 @@
 <?php
-require 'config.php';
+require '../config/config.php';
 
 if ($isTimelapseRunning = tlab\shellScript::checkLockFile()) {
     $lockFileContents = tlab\shellScript::getLockFileContents();
 }
-
 
 ?>
 <!DOCTYPE html>
@@ -19,24 +18,9 @@ if ($isTimelapseRunning = tlab\shellScript::checkLockFile()) {
     <link rel="icon" href="../../favicon.ico">
 
     <title>UI for Raspberry Pi Camera</title>
-
-    <!-- Bootstrap core CSS -->
-    <link href="resources/css/bootstrap.min.css" rel="stylesheet">
-    <link href="resources/css/custom.css" rel="stylesheet">
-
-    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
-    <!--[if lt IE 9]><script src="resources/assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
-    <script src="resources/assets/js/ie-emulation-modes-warning.js"></script>
-
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
+	<link href="resources/css/custom.css" rel="stylesheet">
   </head>
-
   <body>
-
 	<nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container">
         <div class="navbar-header">
@@ -44,9 +28,8 @@ if ($isTimelapseRunning = tlab\shellScript::checkLockFile()) {
         </div>        
       </div>
     </nav>
-
     <div class="container">
-      
+     
       <?php if(_APP_DEMO_MODE) { ?>
       <div class="row">
 		<div class="col-md-12" style="background-color:#ff9933; text-align:center; padding:5px 0">
@@ -245,7 +228,6 @@ if ($isTimelapseRunning = tlab\shellScript::checkLockFile()) {
       </div>
     </div>
 
-
     <div role="tabpanel" class="tab-pane" id="timelapse-tab" style="margin-top:20px; margin-bottom:20px;">
 
     	<div class="form-group">
@@ -337,15 +319,6 @@ if ($isTimelapseRunning = tlab\shellScript::checkLockFile()) {
         <p></p>
       </footer>
     </div> <!-- /container -->
-
-
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="resources/assets/js/vendor/jquery.min.js"></script>
-    <script src="resources/js/bootstrap.min.js"></script>
-    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <script src="resources/assets/js/ie10-viewport-bug-workaround.js"></script>
-	<script src="resources/js/index.js"></script>
+	<script src="dist/bundle.js"></script>
   </body>
 </html>

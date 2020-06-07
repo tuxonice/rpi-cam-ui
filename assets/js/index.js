@@ -1,4 +1,8 @@
-var timeDiff = 0;
+import $ from 'jquery';
+import 'bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
+let timeDiff = 0;
 		
 	function startTime() {
 		
