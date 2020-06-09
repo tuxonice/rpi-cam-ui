@@ -10,6 +10,7 @@
         class="form-control"
         id="shellScript"
         rows="8"
+        v-model="shellScript"
         readonly="readonly"
       ></textarea>
     </div>
@@ -18,6 +19,11 @@
 
 <script>
 export default {
-  name: "ShellScript"
+  name: "ShellScript",
+  data: function() {
+    return {
+      shellScript: ""
+    };
+  }
 };
 </script>

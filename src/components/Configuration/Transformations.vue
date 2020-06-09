@@ -15,6 +15,7 @@
         class="form-control-range"
         name="sharpness"
         id="sharpness"
+        v-model="sharpness"
         value="0"
       />
       <small class="form-text text-muted">
@@ -32,6 +33,7 @@
         class="form-control-range"
         name="contrast"
         id="contrast"
+        v-model="contrast"
         value="0"
       />
       <small class="form-text text-muted">
@@ -49,6 +51,7 @@
         class="form-control-range"
         name="brightness"
         id="brightness"
+        v-model="brightness"
         value="50"
       />
       <small class="form-text text-muted">
@@ -67,6 +70,7 @@
         class="form-control-range"
         name="saturation"
         id="saturation"
+        v-model="saturation"
         value="0"
       />
       <small class="form-text text-muted">
@@ -85,6 +89,7 @@
         name="ISO"
         id="ISO"
         value="100"
+        v-model="ISO"
         step="10"
       />
       <small class="form-text text-muted">
@@ -102,6 +107,7 @@
         class="form-control-range"
         name="ev"
         id="ev"
+        v-model="ev"
         value="0"
       />
       <small class="form-text text-muted">
@@ -113,6 +119,16 @@
 
 <script>
 export default {
-  name: "Transformations"
+  name: "Transformations",
+  data: function() {
+    return {
+      sharpness: 0,
+      contrast: 0,
+      brightness: 50,
+      saturation: 0,
+      ISO: 100,
+      ev: 0
+    };
+  }
 };
 </script>

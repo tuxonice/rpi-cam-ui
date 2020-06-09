@@ -12,6 +12,7 @@
         class="form-control"
         id="timeout"
         name="timeout"
+        v-model="timeout"
         value=""
       />
     </div>
@@ -23,6 +24,7 @@
         class="form-control"
         id="timelapse"
         name="timelapse"
+        v-model="timelapse"
         value=""
       />
     </div>
@@ -33,6 +35,7 @@
           name="process-video"
           id="process-video"
           type="checkbox"
+          v-model="processVideo"
           value="1"
         />
         Process Video
@@ -41,25 +44,42 @@
 
     <div class="form-group">
       <label for="mencoder-vcodec">Codec</label>
-      <select class="form-control" name="mencoder-vcodec" id="mencoder-vcodec">
+      <select
+        class="form-control"
+        name="mencoder-vcodec"
+        id="mencoder-vcodec"
+        v-model="mencoderVcodec"
+      >
         <option value="mpeg4">Mpeg 4</option>
       </select>
-      <p class="help-block">Set Codec</p>
     </div>
 
     <div class="form-group">
       <label for="mencoder-aspect">Video Aspect Ratio</label>
-      <select class="form-control" name="mencoder-aspect" id="mencoder-vcodec">
+      <select
+        class="form-control"
+        name="mencoder-aspect"
+        id="mencoder-aspect"
+        v-model="mencoderAspect"
+      >
         <option value="16/9">16/9</option>
         <option value="4/3">4/3</option>
       </select>
-      <p class="help-block">Video Aspect Ratio</p>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: "TimeLapse"
+  name: "TimeLapse",
+  data: function() {
+    return {
+      timeout: null,
+      timelapse: null,
+      processVideo: false,
+      mencoderVcodec: null,
+      mencoderAspect: null
+    };
+  }
 };
 </script>
