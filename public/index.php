@@ -9,19 +9,13 @@ if ($isTimelapseRunning = tlab\shellScript::checkLockFile()) {
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="icon" href="../../favicon.ico">
-
+  	<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>UI for Raspberry Pi Camera</title>
 	<link href="resources/css/custom.css" rel="stylesheet">
   </head>
   <body>
-	<nav class="navbar navbar-inverse navbar-fixed-top">
+	<nav class="navbar navbar-expand-md navbar-dark bg-dark">
       <div class="container">
         <div class="navbar-header">
           <a class="navbar-brand" href="#">Rasperry Pi Camera UI</a>
@@ -29,7 +23,6 @@ if ($isTimelapseRunning = tlab\shellScript::checkLockFile()) {
       </div>
     </nav>
     <div class="container">
-     
       <?php if(_APP_DEMO_MODE) { ?>
       <div class="row">
 		<div class="col-md-12" style="background-color:#ff9933; text-align:center; padding:5px 0">
@@ -37,7 +30,6 @@ if ($isTimelapseRunning = tlab\shellScript::checkLockFile()) {
 		</div>		  
       </div>
       <?php } ?>
-      
       <div class="row">
       <div class="col-md-6">
 		  <div><b>Raspberry Time:</b> <span id="serverTime"></span></div>
@@ -60,7 +52,7 @@ if ($isTimelapseRunning = tlab\shellScript::checkLockFile()) {
 				$img = 'timelapse-splash.png';
 			}
           ?>
-          <img id="live-image-placeholder" src="resources/images/<?php echo($img);  ?>" class="img-responsive" alt="Responsive image">
+          <img id="live-image-placeholder" src="dist/images/<?php echo($img);  ?>" class="img-responsive" alt="Responsive image">
           
           <?php if(!$isTimelapseRunning) { ?>
           <div style="margin-top:10px;"><button type="button" class="btn btn-primary btn-lg " id="live-image"
@@ -78,12 +70,23 @@ if ($isTimelapseRunning = tlab\shellScript::checkLockFile()) {
           <div>
 
   <!-- Nav tabs -->
-  <ul class="nav nav-tabs" role="tablist">
-    <li role="presentation" class="active"><a href="#basic" aria-controls="basic" role="tab" data-toggle="tab">Basic</a></li>
-    <li role="presentation"><a href="#effects" aria-controls="effects" role="tab" data-toggle="tab">Effects</a></li>
-    <li role="presentation"><a href="#transformations" aria-controls="transformations" role="tab" data-toggle="tab">Transformations</a></li>
-    <li role="presentation"><a href="#shell" aria-controls="shell" role="tab" data-toggle="tab">Shell Script</a></li>
-    <li role="presentation"><a href="#timelapse-tab" aria-controls="timelapse-tab" role="tab" data-toggle="tab">Timelapse</a></li>
+  
+  <ul class="nav nav-tabs">
+    <li class="nav-item">
+		<a class="nav-link active" href="#basic" data-toggle="tab">Basic</a>
+	</li>
+    <li class="nav-item">
+		<a class="nav-link" href="#effects" data-toggle="tab">Effects</a>
+	</li>
+    <li class="nav-item">
+		<a class="nav-link" href="#transformations" data-toggle="tab">Transformations</a>
+	</li>
+    <li class="nav-item">
+		<a class="nav-link" href="#shell" data-toggle="tab">Shell Script</a>
+	</li>
+    <li class="nav-item">
+		<a class="nav-link" href="#timelapse-tab" data-toggle="tab">Timelapse</a>
+	</li>
   </ul>
 
   <!-- Tab panes -->
@@ -92,13 +95,13 @@ if ($isTimelapseRunning = tlab\shellScript::checkLockFile()) {
 
     	<div class="form-group">
     		<label for="width">Image Width</label>
-    		<input type="text" class="form-control" id="width" name="width">
-    		<p class="help-block">Image width</p>
+    		<input type="text" class="form-control" id="width" name="width" aria-describedby="widthHelp">
+    		<small id="widthHelp" class="form-text text-muted">Image width</small>
   		</div>
   		<div class="form-group">
     		<label for="height">Image Height</label>
-    		<input type="text" class="form-control" id="height" name="height">
-    		<p class="help-block">Image height</p>
+    		<input type="text" class="form-control" id="height" name="height" aria-describedby="heightHelp">
+    		<small id="heightHelp" class="form-text text-muted">Image height</small>
   		</div>
   		<div class="form-group">
     		<label for="rotation">Image Rotation</label>
