@@ -6,7 +6,7 @@
           <a class="navbar-brand" href="#">Rasperry Pi Camera UI</a>
           <router-link to="/">Home</router-link> |
           <router-link to="/about">About</router-link>
-        </div>        
+        </div>
       </div>
     </nav>
     <router-view />
