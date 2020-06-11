@@ -29,16 +29,20 @@
         <!-- Tab panes -->
         <div class="tab-content">
           <basic-configuration
-            v-bind:configuration.sync="BasicConfiguration"
+            v-bind:configuration.sync="basicConfiguration"
           ></basic-configuration>
           <effects-configuration
-            v-bind:configuration.sync="EffectsConfiguration"
+            v-bind:configuration.sync="effectsConfiguration"
           ></effects-configuration>
           <transformations-configuration
-            v-bind:configuration.sync="TransformationsConfiguration"
+            v-bind:configuration.sync="transformationsConfiguration"
           ></transformations-configuration>
-          <time-lapse-configuration></time-lapse-configuration>
-          <shell-script-configuration></shell-script-configuration>
+          <time-lapse-configuration
+            v-bind:configuration.sync="timeLapseConfiguration"
+          ></time-lapse-configuration>
+          <shell-script-configuration
+            v-bind:ShellScript="shellScript"
+          ></shell-script-configuration>
         </div>
       </div>
     </form>
@@ -64,26 +68,34 @@ export default {
   mounted() {},
   data: function() {
     return {
-      BasicConfiguration: {
-        width: 100,
+      basicConfiguration: {
+        width: 1200,
         height: 200,
-        rotation: 90,
+        rotation: 0,
         vflip: false,
-        hflip: true
+        hflip: false
       },
-      EffectsConfiguration: {
+      effectsConfiguration: {
         exposure: "",
         awb: "",
         imxfx: ""
       },
-      TransformationsConfiguration: {
+      transformationsConfiguration: {
         sharpness: 0,
         contrast: 0,
         brightness: 50,
         saturation: 0,
         ISO: 100,
         ev: 0
-      }
+      },
+      timeLapseConfiguration: {
+        timeout: null,
+        timelapse: null,
+        processVideo: false,
+        mencoderVcodec: null,
+        mencoderAspect: null
+      },
+      shellScript: ""
     };
   }
 };

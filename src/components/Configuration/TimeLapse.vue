@@ -1,10 +1,5 @@
 <template>
-  <div
-    role="tabpanel"
-    class="tab-pane"
-    id="timelapse-tab"
-    style="margin-top:20px; margin-bottom:20px;"
-  >
+  <div role="tabpanel" class="tab-pane mt-3 mb-3" id="timelapse-tab">
     <div class="form-group">
       <label for="timeout">Total Duration (in seconds)</label>
       <input
@@ -12,7 +7,7 @@
         class="form-control"
         id="timeout"
         name="timeout"
-        v-model="timeout"
+        v-model.number="configuration.timeout"
         value=""
       />
     </div>
@@ -24,7 +19,7 @@
         class="form-control"
         id="timelapse"
         name="timelapse"
-        v-model="timelapse"
+        v-model.number="configuration.timelapse"
         value=""
       />
     </div>
@@ -35,7 +30,7 @@
           name="process-video"
           id="process-video"
           type="checkbox"
-          v-model="processVideo"
+          v-model="configuration.processVideo"
           value="1"
         />
         Process Video
@@ -48,7 +43,7 @@
         class="form-control"
         name="mencoder-vcodec"
         id="mencoder-vcodec"
-        v-model="mencoderVcodec"
+        v-model="configuration.mencoderVcodec"
       >
         <option value="mpeg4">Mpeg 4</option>
       </select>
@@ -60,7 +55,7 @@
         class="form-control"
         name="mencoder-aspect"
         id="mencoder-aspect"
-        v-model="mencoderAspect"
+        v-model="configuration.mencoderAspect"
       >
         <option value="16/9">16/9</option>
         <option value="4/3">4/3</option>
@@ -72,14 +67,11 @@
 <script>
 export default {
   name: "TimeLapse",
+  props: {
+    configuration: Object
+  },
   data: function() {
-    return {
-      timeout: null,
-      timelapse: null,
-      processVideo: false,
-      mencoderVcodec: null,
-      mencoderAspect: null
-    };
+    return {};
   }
 };
 </script>

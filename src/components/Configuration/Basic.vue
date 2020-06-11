@@ -1,10 +1,5 @@
 <template>
-  <div
-    role="tabpanel"
-    class="tab-pane active"
-    id="basic"
-    style="margin-top:20px; margin-bottom:20px;"
-  >
+  <div role="tabpanel" class="tab-pane mt-3 mb-3 active" id="basic">
     <div class="form-group">
       <label for="width">Image Width</label>
       <input

@@ -1,13 +1,8 @@
 <template>
-  <div
-    role="tabpanel"
-    class="tab-pane"
-    id="transformations"
-    style="margin-top:20px; margin-bottom:20px;"
-  >
+  <div role="tabpanel" class="tab-pane mt-3 mb-3" id="transformations">
     <div class="form-group">
       <label for="sharpness">Image sharpness</label>
-      <span id="sharpness-value"> 0 </span>
+      <span class="current-value"> {{ configuration.sharpness }} </span>
       <input
         type="range"
         min="-100"
@@ -25,7 +20,7 @@
 
     <div class="form-group">
       <label for="contrast">Image contrast</label>
-      <span id="contrast-value"> 0 </span>
+      <span class="current-value"> {{ configuration.contrast }} </span>
       <input
         type="range"
         min="-100"
@@ -43,7 +38,7 @@
 
     <div class="form-group">
       <label for="brightness">Image brightness </label>
-      <span id="brightness-value"> 50 </span>
+      <span class="current-value"> {{ configuration.brightness }} </span>
       <input
         type="range"
         min="0"
@@ -62,7 +57,7 @@
 
     <div class="form-group">
       <label for="saturation">Image saturation</label>
-      <span id="saturation-value"> 0 </span>
+      <span class="current-value"> {{ configuration.saturation }} </span>
       <input
         type="range"
         min="-100"
@@ -80,7 +75,7 @@
 
     <div class="form-group">
       <label for="ISO">Capture ISO</label>
-      <span id="ISO-value"> 100 </span>
+      <span class="current-value"> {{ configuration.ISO }} </span>
       <input
         type="range"
         min="100"
@@ -99,7 +94,7 @@
 
     <div class="form-group">
       <label for="ev">EV compensation</label>
-      <span id="ev-value"> 0 </span>
+      <span class="current-value"> {{ configuration.ev }} </span>
       <input
         type="range"
         min="-10"
@@ -128,3 +123,9 @@ export default {
   }
 };
 </script>
+<style scoped>
+span.current-value {
+  color: blue;
+  font-weight: 800;
+}
+</style>

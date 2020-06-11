@@ -1,10 +1,5 @@
 <template>
-  <div
-    role="tabpanel"
-    class="tab-pane"
-    id="shell"
-    style="margin-top:20px; margin-bottom:20px;"
-  >
+  <div role="tabpanel" class="tab-pane mt-3 mb-3" id="shell">
     <div class="form-group">
       <textarea
         class="form-control"
@@ -20,10 +15,11 @@
 <script>
 export default {
   name: "ShellScript",
+  props: {
+    shellScript: String
+  },
   data: function() {
-    return {
-      shellScript: ""
-    };
+    return {};
   }
 };
 </script>

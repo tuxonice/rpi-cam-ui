@@ -1,10 +1,5 @@
 <template>
-  <div
-    role="tabpanel"
-    class="tab-pane"
-    id="effects"
-    style="margin-top:20px; margin-bottom:20px;"
-  >
+  <div role="tabpanel" class="tab-pane mt-3 mb-3" id="effects">
     <div class="form-group">
       <label for="exposure">Exposure mode</label>
       <select
