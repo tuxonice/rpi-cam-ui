@@ -12,7 +12,7 @@
         class="form-control"
         id="width"
         name="width"
-        v-model="width"
+        v-model.number="configuration.width"
         aria-describedby="widthHelp"
       />
       <small id="widthHelp" class="form-text text-muted">Image width</small>
@@ -24,7 +24,7 @@
         class="form-control"
         id="height"
         name="height"
-        v-model="height"
+        v-model.number="configuration.height"
         aria-describedby="heightHelp"
       />
       <small id="heightHelp" class="form-text text-muted">Image height</small>
@@ -35,9 +35,9 @@
         class="form-control"
         id="rotation"
         name="rotation"
-        v-model="rotation"
+        v-model.number="configuration.rotation"
       >
-        <option value="">No rotation</option>
+        <option value="0">No rotation</option>
         <option value="90">90 Degrees</option>
         <option value="180">180 Degrees</option>
         <option value="270">270 Degrees</option>
@@ -50,7 +50,7 @@
           id="hflip"
           type="checkbox"
           value="1"
-          v-model="hflip"
+          v-model="configuration.hflip"
         />
         Horizontal flip
       </label>
@@ -62,7 +62,7 @@
           id="vflip"
           type="checkbox"
           value="1"
-          v-model="vflip"
+          v-model="configuration.vflip"
         />
         Vertical flip
       </label>
@@ -73,14 +73,11 @@
 <script>
 export default {
   name: "BasicConfiguration",
+  props: {
+    configuration: Object
+  },
   data: function() {
-    return {
-      width: null,
-      height: null,
-      rotation: 0,
-      hflip: false,
-      vflip: false
-    };
+    return {};
   }
 };
 </script>

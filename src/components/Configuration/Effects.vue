@@ -11,7 +11,7 @@
         class="form-control"
         id="exposure"
         name="exposure"
-        v-model="exposure"
+        v-model="configuration.exposure"
         aria-describedby="exposureHelp"
       >
         <option value="">Use automatic exposure mode (default)</option>
@@ -44,7 +44,7 @@
         class="form-control"
         name="awb"
         id="awb"
-        v-model="awb"
+        v-model="configuration.awb"
         aria-describedby="awbHelp"
       >
         <option value="">Automatic mode (default)</option>
@@ -69,7 +69,12 @@
     </div>
     <div class="form-group">
       <label for="imxfx">Image effect</label>
-      <select class="form-control" name="imxfx" id="imxfx" v-model="imxfx">
+      <select
+        class="form-control"
+        name="imxfx"
+        id="imxfx"
+        v-model="configuration.imxfx"
+      >
         <option value="">No effect (default)</option>
         <option value="negative">Invert the image colours</option>
         <option value="solarise">Solarise the image</option>
@@ -105,6 +110,9 @@
 <script>
 export default {
   name: "Effects",
+  props: {
+    configuration: Object
+  },
   data: function() {
     return {
       exposure: "",

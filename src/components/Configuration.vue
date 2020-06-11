@@ -28,9 +28,15 @@
         </ul>
         <!-- Tab panes -->
         <div class="tab-content">
-          <basic-configuration></basic-configuration>
-          <effects-configuration></effects-configuration>
-          <transformations-configuration></transformations-configuration>
+          <basic-configuration
+            v-bind:configuration.sync="BasicConfiguration"
+          ></basic-configuration>
+          <effects-configuration
+            v-bind:configuration.sync="EffectsConfiguration"
+          ></effects-configuration>
+          <transformations-configuration
+            v-bind:configuration.sync="TransformationsConfiguration"
+          ></transformations-configuration>
           <time-lapse-configuration></time-lapse-configuration>
           <shell-script-configuration></shell-script-configuration>
         </div>
@@ -54,6 +60,31 @@ export default {
     TransformationsConfiguration,
     TimeLapseConfiguration,
     ShellScriptConfiguration
+  },
+  mounted() {},
+  data: function() {
+    return {
+      BasicConfiguration: {
+        width: 100,
+        height: 200,
+        rotation: 90,
+        vflip: false,
+        hflip: true
+      },
+      EffectsConfiguration: {
+        exposure: "",
+        awb: "",
+        imxfx: ""
+      },
+      TransformationsConfiguration: {
+        sharpness: 0,
+        contrast: 0,
+        brightness: 50,
+        saturation: 0,
+        ISO: 100,
+        ev: 0
+      }
+    };
   }
 };
 </script>
