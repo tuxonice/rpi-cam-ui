@@ -3,13 +3,9 @@
     <div class="container">
       <demo-mode></demo-mode>
       <server-time></server-time>
-      <div class="row">
-        <image-preview></image-preview>
-        <configuration></configuration>
-      </div>
+      <configuration></configuration>
       <info-box></info-box>
       <hr />
-
       <footer>
         <p></p>
       </footer>
@@ -21,7 +17,6 @@
 <script>
 import DemoMode from "@/components/DemoMode.vue";
 import ServerTime from "@/components/ServerTime.vue";
-import ImagePreview from "@/components/ImagePreview.vue";
 import Configuration from "@/components/Configuration.vue";
 import InfoBox from "@/components/InfoBox.vue";
 
@@ -30,7 +25,6 @@ export default {
   components: {
     DemoMode,
     ServerTime,
-    ImagePreview,
     Configuration,
     InfoBox
   }

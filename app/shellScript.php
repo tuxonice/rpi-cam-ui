@@ -162,12 +162,12 @@ class shellScript
      * @param string $type
      * @param bool $demoMode
      */
-    public function __construct($options, $type = 'preview', $demoMode = true)
+    public function __construct($configuration, $type = 'preview', $demoMode = true)
     {
         $this->demoMode = $demoMode;
         $this->runType = $type;
         $this->init();
-        $this->parseOptions($options);
+        $this->parseOptions($configuration);
     }
 
     /**
