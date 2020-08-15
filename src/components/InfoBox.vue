@@ -6,7 +6,7 @@
         class="alert alert-success"
         role="alert"
         style="margin-top:20px"
-      ></div>
+      >This is a nice info text</div>
     </div>
   </div>
 </template>

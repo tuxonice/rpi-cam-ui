@@ -1,14 +1,4 @@
 <template>
-  <div class="row">
-    <div class="col-md-6">
-      <h2>Preview</h2>
-      <img
-        id="live-image-placeholder"
-        src="dist/timelapse-splash.png"
-        class="img-responsive"
-        alt="Responsive image"
-      />
-    </div>
     <div class="col-md-6">
       <h2>Configuration</h2>
       <form id="configData">
@@ -61,18 +51,6 @@
         </div>
       </form>
     </div>
-
-    <div class="mt-2 ml-3">
-      <button
-        type="button"
-        @click.prevent="preview"
-        class="btn btn-primary btn-lg "
-        id="live-image"
-      >
-        Preview Image
-      </button>
-    </div>
-  </div>
 </template>
 
 <script>
