@@ -138,13 +138,13 @@ namespace tlab;
 class shellScript
 {
 
-    const FILENAME = 'script.sh';
+    const FILENAME = '../bin/script.sh';
     const HEADER = '#!/bin/bash';
     const TYPE_BOOLEAN = 1;
     const TYPE_STRING = 2;
     const TYPE_INT = 3;
     const TYPE_FLOAT = 4;
-    const LOCK_FILENAME = './running.lock';
+    const LOCK_FILENAME = '../bin/running.lock';
     const BASE_IMG_FOLDER = './media';
 
     protected $validOptions = [];
@@ -198,26 +198,26 @@ class shellScript
      */
     protected function init()
     {
-        $this->validOptions['width'] = ['w', 'Set image width', self::TYPE_INT];
-        $this->validOptions['height'] = ['h', 'Set image height', self::TYPE_INT];
-        $this->validOptions['rotation'] = ['rot', 'Set image rotation', self::TYPE_INT];
-        $this->validOptions['hflip'] = ['hf', 'Set horizontal flip', self::TYPE_BOOLEAN];
-        $this->validOptions['vflip'] = ['vf', 'Set vertical flip', self::TYPE_BOOLEAN];
-        $this->validOptions['exposure'] = ['ex', 'Set exposure mode', self::TYPE_STRING];
-        $this->validOptions['awb'] = ['awb', 'Set Automatic White Balance (AWB) mode', self::TYPE_STRING];
-        $this->validOptions['imxfx'] = ['ifx', 'Set image effect', self::TYPE_STRING];
-        $this->validOptions['sharpness'] = ['sh', 'Set image sharpness', self::TYPE_INT];
-        $this->validOptions['contrast'] = ['co', 'Set image contrast', self::TYPE_INT];
-        $this->validOptions['brightness'] = ['br', 'Set image brightness', self::TYPE_INT];
-        $this->validOptions['saturation'] = ['sa', 'Set image saturation', self::TYPE_INT];
-        $this->validOptions['ISO'] = ['ISO', 'Set capture ISO', self::TYPE_INT];
-        $this->validOptions['ev'] = ['ev', 'Set EV compensation', self::TYPE_INT];
-        $this->validOptions['timeout'] = [
+        $this->validOptions['basicConfiguration:imageWidth'] = ['w', 'Set image width', self::TYPE_INT, null];
+        $this->validOptions['basicConfiguration:imageHeight'] = ['h', 'Set image height', self::TYPE_INT, null];
+        $this->validOptions['basicConfiguration:imageRotation'] = ['rot', 'Set image rotation', self::TYPE_INT, 0];
+        $this->validOptions['basicConfiguration:hflip'] = ['hf', 'Set horizontal flip', self::TYPE_BOOLEAN, false];
+        $this->validOptions['basicConfiguration:vflip'] = ['vf', 'Set vertical flip', self::TYPE_BOOLEAN, false];
+        $this->validOptions['effectsConfiguration:exposure'] = ['ex', 'Set exposure mode', self::TYPE_STRING, null];
+        $this->validOptions['effectsConfiguration:awb'] = ['awb', 'Set Automatic White Balance (AWB) mode', self::TYPE_STRING, null];
+        $this->validOptions['effectsConfiguration:imxfx'] = ['ifx', 'Set image effect', self::TYPE_STRING, null];
+        $this->validOptions['transformationsConfiguration:sharpness'] = ['sh', 'Set image sharpness', self::TYPE_INT, null];
+        $this->validOptions['transformationsConfiguration:contrast'] = ['co', 'Set image contrast', self::TYPE_INT, null];
+        $this->validOptions['transformationsConfiguration:brightness'] = ['br', 'Set image brightness', self::TYPE_INT, 50];
+        $this->validOptions['transformationsConfiguration:saturation'] = ['sa', 'Set image saturation', self::TYPE_INT, null];
+        $this->validOptions['transformationsConfiguration:iso'] = ['ISO', 'Set capture ISO', self::TYPE_INT, 100];
+        $this->validOptions['transformationsConfiguration:ev'] = ['ev', 'Set EV compensation', self::TYPE_INT, null];
+        $this->validOptions['timeLapseConfiguration:timeout'] = [
             't',
             'Time before takes picture and shuts down (miliseconds)',
             self::TYPE_INT
         ];
-        $this->validOptions['timelapse'] = ['tl', 'Timelapse mode (miliseconds)', self::TYPE_INT];
+        $this->validOptions['timeLapseConfiguration:timelapse'] = ['tl', 'Timelapse mode (miliseconds)', self::TYPE_INT];
     }
 
     /**
@@ -229,37 +229,47 @@ class shellScript
             return;
         }
 
-        foreach ($options as $option => $value) {
-            $value = trim($value);
-            if (isset($this->validOptions[$option])) {
-                $optionType = $this->validOptions[$option][2];
-                if ($optionType == self::TYPE_BOOLEAN) {
-                    $this->options[] = '-' . $this->validOptions[$option][0];
-                    $this->commentLines[] = '# ' . $this->validOptions[$option][1];
-                } else {
-                    if ($value != '') {
-
-                        if ($option == 'timeout') {
-                            $value = ((int)$value * 1000);
-                            $this->timeout = $value;
-                        }
-                        if ($option == 'timelapse') {
-                            $value = ((int)$value * 1000);
-                            $this->timelapse = $value;
-                        }
-
-
-                        $this->options[] = '-' . $this->validOptions[$option][0] . ' ' . $value;
-                        $this->commentLines[] = '# ' . $this->validOptions[$option][1] . ': ' . $value;
-
-                    }
-
-                }
-
+        foreach ($options as $category => $configuration) {
+            if(strpos($category, 'timeLapseConfiguration') === 0 && $this->runType === 'preview') {
+                continue;
             }
+            foreach($configuration as $option => $value) {
+                if (isset($this->validOptions[$category.':'.$option])) {
+
+                    $optionType = $this->validOptions[$category.':'.$option][2];
+                    if ($optionType == self::TYPE_BOOLEAN && $value === true) {
+                        $this->options[] = '-' . $this->validOptions[$category.':'.$option][0];
+                        $this->commentLines[] = '# ' . $this->validOptions[$category.':'.$option][1];
+                    } else {
+                        if ($value != '' && $this->validOptions[$category.':'.$option][3] !== $value) {
+    
+                            if ($option == 'timeout') {
+                                $value = ((int)$value * 1000);
+                                $this->timeout = $value;
+                            }
+                            if ($option == 'timelapse') {
+                                $value = ((int)$value * 1000);
+                                $this->timelapse = $value;
+                            }
+    
+    
+                            $this->options[] = '-' . $this->validOptions[$category.':'.$option][0] . ' ' . $value;
+                            $this->commentLines[] = '# ' . $this->validOptions[$category.':'.$option][1] . ': ' . $value;
+    
+                        }
+    
+                    }
+    
+                }
+            }
+            
+            
+            
+            
         }
 
-
+        dump($this->options);
+        dump($this->commentLines);
     }
 
     /**
@@ -302,8 +312,10 @@ class shellScript
                 $shellContent .= implode("\n", $this->commentLines) . "\n\n";
                 $shellContent .= "rm " . self::LOCK_FILENAME . "\n\n";
             } else {
+                $shellContent .= "echo '".$this->lockFileContents()."' > running.lock\n\n";
                 $shellContent .= $this->createContent() . "\n\n";
                 $shellContent .= implode("\n", $this->commentLines) . "\n\n";
+                //$shellContent .= "rm " . self::LOCK_FILENAME . "\n\n";
             }
 
             fwrite($fp, $shellContent);
@@ -330,19 +342,14 @@ class shellScript
      */
     protected function lockFileContents()
     {
-        $startTime = time();
-        $endTime = $startTime + ceil($this->timeout / 1000);
-        $imageNumber = $this->getTimelapseImageCount();
-        $imageFolder = $this->getImageFolder();
+        $fileContent = [
+            'timelapseTotalTime' => 3600, //FIXME
+            'timelapseImageCount' => $this->getTimelapseImageCount(),
+            'timelapseImageFolder' => $this->getImageFolder(),
+        ];
+        
 
-        $fileContent = array(
-            'startTime' => $startTime,
-            'endTime' => $endTime,
-            'imageNumber' => $imageNumber,
-            'imageFolder' => $imageFolder,
-        );
-
-        return base64_encode(serialize($fileContent));
+        return json_encode($fileContent);
 
     }
 
@@ -400,20 +407,11 @@ class shellScript
      */
     public static function getLockFileContents()
     {
-
         if (self::checkLockFile()) {
-            $fileContents = file_get_contents(self::LOCK_FILENAME);
-            $data = unserialize(base64_decode($fileContents));
-
-            return $data;
+            return file_get_contents(self::LOCK_FILENAME);
         }
 
-        return array(
-            'startTime' => 0,
-            'endTime' => 0,
-            'imageNumber' => 0,
-            'imageFolder' => '',
-        );
+        return '{}';
     }
 
     /**

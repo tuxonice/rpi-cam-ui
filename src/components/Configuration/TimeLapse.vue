@@ -7,7 +7,8 @@
         class="form-control"
         id="timeout"
         name="timeout"
-        v-model.number="configuration.timeout"
+        @input="updateTimeout()"
+        v-model.number="timeout"
         value=""
       />
     </div>
@@ -19,7 +20,8 @@
         class="form-control"
         id="timelapse"
         name="timelapse"
-        v-model.number="configuration.timelapse"
+        @input="updateTimelapse()"
+        v-model.number="timelapse"
         value=""
       />
     </div>
@@ -30,7 +32,8 @@
           name="process-video"
           id="process-video"
           type="checkbox"
-          v-model="configuration.processVideo"
+          @change="updateProcessVideo()"
+          v-model="processVideo"
           value="1"
         />
         Process Video
@@ -43,7 +46,8 @@
         class="form-control"
         name="mencoder-vcodec"
         id="mencoder-vcodec"
-        v-model="configuration.mencoderVcodec"
+        @change="updateMencoderVcodec()"
+        v-model="mencoderVcodec"
       >
         <option value="mpeg4">Mpeg 4</option>
       </select>
@@ -55,23 +59,60 @@
         class="form-control"
         name="mencoder-aspect"
         id="mencoder-aspect"
-        v-model="configuration.mencoderAspect"
+        @change="updateMencoderAspect()"
+        v-model="mencoderAspect"
       >
         <option value="16/9">16/9</option>
         <option value="4/3">4/3</option>
       </select>
     </div>
+    <time-lapse-button></time-lapse-button>
   </div>
 </template>
 
 <script>
+import TimeLapseButton from "@/components/Configuration/TimeLapseButton.vue";
+
 export default {
   name: "TimeLapse",
-  props: {
-    configuration: Object
+  components: {
+    TimeLapseButton
   },
+  props: {},
   data: function() {
-    return {};
+    return {
+      timeout: null,
+      timelapse: null,
+      processVideo: false,
+      mencoderVcodec: null,
+      mencoderAspect: null
+    };
+  },
+  methods: {
+    updateTimeout() {
+      this.$store.commit("setTimeLapseConfigurationTimeout", this.timeout);
+    },
+    updateTimelapse() {
+      this.$store.commit("setTimeLapseConfigurationTimelapse", this.timelapse);
+    },
+    updateProcessVideo() {
+      this.$store.commit(
+        "setTimeLapseConfigurationProcessVideo",
+        this.processVideo
+      );
+    },
+    updateMencoderVcodec() {
+      this.$store.commit(
+        "setTimeLapseConfigurationMencoderVcodec",
+        this.mencoderVcodec
+      );
+    },
+    updateMencoderAspect() {
+      this.$store.commit(
+        "setTimeLapseConfigurationMencoderAspect",
+        this.mencoderAspect
+      );
+    }
   }
 };
 </script>

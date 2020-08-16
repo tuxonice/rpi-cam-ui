@@ -6,7 +6,8 @@
         class="form-control"
         id="exposure"
         name="exposure"
-        v-model="configuration.exposure"
+        @change="updateExposure()"
+        v-model="exposure"
         aria-describedby="exposureHelp"
       >
         <option value="">Use automatic exposure mode (default)</option>
@@ -39,7 +40,8 @@
         class="form-control"
         name="awb"
         id="awb"
-        v-model="configuration.awb"
+        @change="updateAwb()"
+        v-model="awb"
         aria-describedby="awbHelp"
       >
         <option value="">Automatic mode (default)</option>
@@ -68,7 +70,8 @@
         class="form-control"
         name="imxfx"
         id="imxfx"
-        v-model="configuration.imxfx"
+        @change="updateImxfx()"
+        v-model="imxfx"
       >
         <option value="">No effect (default)</option>
         <option value="negative">Invert the image colours</option>
@@ -105,15 +108,25 @@
 <script>
 export default {
   name: "Effects",
-  props: {
-    configuration: Object
-  },
+  props: {},
   data: function() {
     return {
       exposure: "",
       awb: "",
       imxfx: ""
     };
-  }
+  },
+  methods: {
+    updateExposure() {
+      this.$store.commit("setEffectsConfigurationExposure", this.exposure);
+    },
+    updateAwb() {
+      this.$store.commit("setEffectsConfigurationAwb", this.awb);
+    },
+    updateImxfx() {
+      this.$store.commit("setEffectsConfigurationImxfx", this.imxfx);
+    }
+  },
+  mounted() {}
 };
 </script>

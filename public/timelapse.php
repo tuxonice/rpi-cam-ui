@@ -2,12 +2,16 @@
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, X-Requested-With");
+
 require '../config/config.php';
 
 
 $configuration = json_decode(file_get_contents("php://input"), true);
-var_dump($configuration);
 
+
+$script = new tlab\shellScript($configuration, 'timelapse', _APP_DEMO_MODE);
+$shellContent = $script->saveScript();
+dd($shellContent);
 die;
 
 /*

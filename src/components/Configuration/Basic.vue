@@ -1,36 +1,43 @@
 <template>
   <div role="tabpanel" class="tab-pane mt-3 mb-3 active" id="basic">
     <div class="form-group">
-      <label for="width">Image Width</label>
+      <label for="imageWidth">Image Width</label>
       <input
         type="text"
         class="form-control"
-        id="width"
-        name="width"
-        v-model.number="configuration.width"
-        aria-describedby="widthHelp"
+        id="imageWidth"
+        name="imageWidth"
+        v-model.number="imageWidth"
+        @input="updateImageWidth()"
+        aria-describedby="imageWidthHelp"
       />
-      <small id="widthHelp" class="form-text text-muted">Image width</small>
+      <small id="imageWidthHelp" class="form-text text-muted">
+        Image width
+      </small>
     </div>
     <div class="form-group">
-      <label for="height">Image Height</label>
+      <label for="imageHeight">Image Height</label>
       <input
         type="text"
         class="form-control"
-        id="height"
-        name="height"
-        v-model.number="configuration.height"
-        aria-describedby="heightHelp"
+        id="imageHeight"
+        name="imageHeight"
+        @input="updateImageHeight()"
+        v-model.number="imageHeight"
+        aria-describedby="imageHeightHelp"
       />
-      <small id="heightHelp" class="form-text text-muted">Image height</small>
+      <small id="imageHeightHelp" class="form-text text-muted"
+        >Image height</small
+      >
     </div>
     <div class="form-group">
-      <label for="rotation">Image Rotation</label>
+      <label for="imageRotation">Image Rotation</label>
       <select
         class="form-control"
-        id="rotation"
-        name="rotation"
-        v-model.number="configuration.rotation"
+        id="imageRotation"
+        name="imageRotation"
+        @change="updateImageRotation()"
+        v-model.number="imageRotation"
       >
         <option value="0">No rotation</option>
         <option value="90">90 Degrees</option>
@@ -44,8 +51,8 @@
           name="hflip"
           id="hflip"
           type="checkbox"
-          value="1"
-          v-model="configuration.hflip"
+          @change="updateHflip()"
+          v-model="hflip"
         />
         Horizontal flip
       </label>
@@ -56,8 +63,8 @@
           name="vflip"
           id="vflip"
           type="checkbox"
-          value="1"
-          v-model="configuration.vflip"
+          @change="updateVflip()"
+          v-model="vflip"
         />
         Vertical flip
       </label>
@@ -68,11 +75,45 @@
 <script>
 export default {
   name: "BasicConfiguration",
-  props: {
-    configuration: Object
-  },
+  props: {},
   data: function() {
-    return {};
+    return {
+      imageWidth: 1200,
+      imageHeight: 1200,
+      imageRotation: 0,
+      hflip: false,
+      vflip: false
+    };
+  },
+  methods: {
+    updateImageWidth() {
+      this.$store.commit("setBasicConfigurationImageWidth", this.imageWidth);
+    },
+    updateImageHeight() {
+      this.$store.commit("setBasicConfigurationImageHeight", this.imageHeight);
+    },
+    updateImageRotation() {
+      this.$store.commit(
+        "setBasicConfigurationImageRotation",
+        this.imageRotation
+      );
+    },
+    updateVflip() {
+      this.$store.commit("setBasicConfigurationVflip", this.vflip);
+    },
+    updateHflip() {
+      this.$store.commit("setBasicConfigurationHflip", this.hflip);
+    }
+  },
+  mounted() {
+    this.$store.commit("setBasicConfigurationImageWidth", this.imageWidth);
+    this.$store.commit("setBasicConfigurationImageHeight", this.imageHeight);
+    this.$store.commit(
+      "setBasicConfigurationImageRotation",
+      this.imageRotation
+    );
+    this.$store.commit("setBasicConfigurationVflip", this.vflip);
+    this.$store.commit("setBasicConfigurationHflip", this.hflip);
   }
 };
 </script>

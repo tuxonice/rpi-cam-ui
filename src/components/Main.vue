@@ -25,6 +25,7 @@ import Configuration from "@/components/Configuration.vue";
 import InfoBox from "@/components/InfoBox.vue";
 import Preview from "@/components/Preview.vue";
 import PreviewButton from "@/components/PreviewButton.vue";
+import axios from "axios";
 
 export default {
   name: "Main",
@@ -35,6 +36,30 @@ export default {
     InfoBox,
     Preview,
     PreviewButton
+  },
+  data() {
+    return {
+      polling: null
+    };
+  },
+  methods: {
+    pollData() {
+      this.polling = setInterval(() => {
+        console.log(Date.now());
+        this.heartbeat();
+      }, 10000);
+    },
+    heartbeat: async function() {
+      const status = await axios.post("http://127.0.0.1:8000/heartbeat.php");
+      this.$store.commit("setTime", status.data);
+      console.log(status.data);
+    }
+  },
+  beforeDestroy() {
+    clearInterval(this.polling);
+  },
+  created() {
+    // this.pollData();
   }
 };
 </script>
