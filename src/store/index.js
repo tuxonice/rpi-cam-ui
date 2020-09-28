@@ -34,11 +34,16 @@ export default new Vuex.Store({
       processVideo: false,
       mencoderVcodec: null,
       mencoderAspect: null
-    }
+    },
+    shellContent: '',
+    previewImage: 'dist/timelapse-splash.png'
   },
   mutations: {
     setTime(state, status) {
       state.status = status;
+    },
+    setShellContent(state, content) {
+      state.shellContent = content;
     },
     setBasicConfigurationImageWidth(state, imageWidth) {
       state.basicConfiguration.imageWidth = imageWidth;

@@ -15,11 +15,13 @@
 <script>
 export default {
   name: "ShellScript",
-  props: {
-    shellScript: String
-  },
   data: function() {
     return {};
+  },
+  computed: {
+    shellScript() {
+      return this.$store.state.shellContent;
+    }
   }
 };
 </script>

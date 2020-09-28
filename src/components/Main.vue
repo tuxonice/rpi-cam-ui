@@ -6,7 +6,6 @@
       <div class="row">
         <preview></preview>
         <configuration></configuration>
-        <preview-button></preview-button>
       </div>
       <info-box></info-box>
       <hr />
@@ -24,7 +23,6 @@ import ServerTime from "@/components/ServerTime.vue";
 import Configuration from "@/components/Configuration.vue";
 import InfoBox from "@/components/InfoBox.vue";
 import Preview from "@/components/Preview.vue";
-import PreviewButton from "@/components/PreviewButton.vue";
 import axios from "axios";
 
 export default {
@@ -34,8 +32,7 @@ export default {
     ServerTime,
     Configuration,
     InfoBox,
-    Preview,
-    PreviewButton
+    Preview
   },
   data() {
     return {

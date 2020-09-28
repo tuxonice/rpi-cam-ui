@@ -1,4 +1,6 @@
 <?php
+use tlab\shellScript;
+
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, X-Requested-With");
@@ -6,43 +8,37 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
 require '../config/config.php';
 
 
-$configuration = json_decode(file_get_contents("php://input"), true);
+// $configuration = json_decode(file_get_contents("php://input"), true);
 
+$configuration["basicConfiguration"] = [
+    "imageWidth" => 1200,
+    "imageHeight" => 1200,
+    "imageRotation" => 0,
+    "hflip" => true,
+    "vflip" => false,
+];
+  $configuration["effectsConfiguration"] = [
+    "exposure" => "",
+    "awb" => "",
+    "imxfx" => "",
+  ];
 
-$script = new tlab\shellScript($configuration, 'timelapse', _APP_DEMO_MODE);
-$shellContent = $script->saveScript();
-dd($shellContent);
+  $configuration["transformationsConfiguration"] = [
+    "sharpness" => 30,
+    "contrast" => 10,
+    "brightness" => 55,
+    "saturation" => 6,
+    "iso" => 200,
+    "ev" => 20,
+  ];
+
+  $configuration["timeLapseConfiguration"] = [
+    "timeout" => 100,
+    "timelapse" => 10,
+  ];
+
+$script = new shellScript($configuration, _APP_DEMO_MODE);
+$shellContent = $script->saveTimelapseScript();
+echo(nl2br($shellContent));
 die;
 
-/*
-if ($isTimelapseRunning = tlab\shellScript::checkLockFile()) {
-    $info = 'A timelapse is running!';
-    $status = 'danger'; //info, success, warning, danger
-    header('Content-Type: application/json');
-    echo json_encode(array(
-        'shellContent' => '',
-        'previewImage' => '',
-        'info' => $info,
-        'status' => $status,
-        'type' => '',
-        'isTimelapseRunning' => $isTimelapseRunning
-    ));
-    die;
-}
-*/
-
-$runType = (isset($_POST['type']) && $_POST['type'] == 'timelapse') ? 'timelapse' : 'preview';
-
-$script = new tlab\shellScript($configuration, $runType, _APP_DEMO_MODE);
-$shellContent = $script->saveScript();
-//list($previewImage, $info, $status, $type) = $script->executeScript();
-//sleep(6);
-header('Content-Type: application/json');
-echo json_encode(array(
-    'shellContent' => $shellContent,
-    //'previewImage' => $previewImage,
-    //'info' => $info,
-    //'status' => $status,
-    'type' => $type,
-    //'isTimelapseRunning' => $isTimelapseRunning
-));

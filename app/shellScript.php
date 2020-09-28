@@ -138,14 +138,15 @@ namespace tlab;
 class shellScript
 {
 
-    const FILENAME = '../bin/script.sh';
+    const PREVIEW_FILENAME = 'bin/preview.sh';
+    const TIMELAPSE_FILENAME = 'bin/timelapse.sh';
+    const LOCK_FILENAME = 'bin/running.lock';
     const HEADER = '#!/bin/bash';
     const TYPE_BOOLEAN = 1;
     const TYPE_STRING = 2;
     const TYPE_INT = 3;
     const TYPE_FLOAT = 4;
-    const LOCK_FILENAME = '../bin/running.lock';
-    const BASE_IMG_FOLDER = './media';
+    
 
     protected $validOptions = [];
     protected $options = [];
@@ -153,19 +154,17 @@ class shellScript
     protected $timeout;
     protected $timelapse;
     protected $demoMode = false;
-    protected $imageFolder;
-    protected $runType;
+
+
 
     /**
      * shellScript constructor.
      * @param $options
-     * @param string $type
      * @param bool $demoMode
      */
-    public function __construct($configuration, $type = 'preview', $demoMode = true)
+    public function __construct($configuration, $demoMode = true)
     {
         $this->demoMode = $demoMode;
-        $this->runType = $type;
         $this->init();
         $this->parseOptions($configuration);
     }
@@ -230,9 +229,6 @@ class shellScript
         }
 
         foreach ($options as $category => $configuration) {
-            if(strpos($category, 'timeLapseConfiguration') === 0 && $this->runType === 'preview') {
-                continue;
-            }
             foreach($configuration as $option => $value) {
                 if (isset($this->validOptions[$category.':'.$option])) {
 
@@ -263,23 +259,22 @@ class shellScript
                 }
             }
             
-            
-            
-            
         }
-
-        dump($this->options);
-        dump($this->commentLines);
     }
 
     /**
      * @return string
      */
-    protected function createContent()
+    protected function createContent($isTimelapse = false)
     {
         if ($this->demoMode) {
             $command = "# Demo mode\n";
-            $command .= "sleep 10s\n";
+            if($isTimelapse && $this->getTimelapseTotalTime() > 0) {
+                $command .= "sleep ".$this->getTimelapseTotalTime()."s\n";
+            } else {
+                $command .= "sleep 6s\n";
+            }
+            
             $command .= '# raspistill ';
         } else {
             $command = 'raspistill ';
@@ -289,35 +284,47 @@ class shellScript
             $command .= $option . ' ';
         }
 
-        if ($this->isTimelapseScript()) {
-            return $command . ' -o ' . $this->getImageFolder() . '/img-%05d.jpg';
+        if ($isTimelapse) {
+            return $command . ' -o ' . dirname(__DIR__).'/public/media/'.$this->getImageFolderName().'/img-%05d.jpg';
         }
 
-        return $command . ' -o media/img.jpg';
+        return $command . ' -o ' . dirname(__DIR__).'/public/media/img.jpg';
     }
 
     /**
      * @return string
      */
-    public function saveScript()
+    public function saveTimelapseScript()
     {
         $shellContent = '';
-        $fp = fopen(self::FILENAME, 'w');
+        $fp = fopen(dirname(__DIR__).'/'.self::TIMELAPSE_FILENAME, 'w');
         if ($fp) {
             $shellContent .= self::HEADER . "\n\n";
-            if ($this->isTimelapseScript()) {
-                $shellContent .= "mkdir " . $this->getImageFolder() . "\n\n";
-                $shellContent .= "echo \"" . $this->lockFileContents() . "\" > " . self::LOCK_FILENAME . "\n\n";
-                $shellContent .= $this->createContent() . "\n\n";
-                $shellContent .= implode("\n", $this->commentLines) . "\n\n";
-                $shellContent .= "rm " . self::LOCK_FILENAME . "\n\n";
-            } else {
-                $shellContent .= "echo '".$this->lockFileContents()."' > running.lock\n\n";
-                $shellContent .= $this->createContent() . "\n\n";
-                $shellContent .= implode("\n", $this->commentLines) . "\n\n";
-                //$shellContent .= "rm " . self::LOCK_FILENAME . "\n\n";
-            }
+            $shellContent .= "mkdir " . dirname(__DIR__).'/public/media/'.$this->getImageFolderName() . "\n\n";
+            $shellContent .= "echo '". $this->lockFileContents() . "' > " . dirname(__DIR__).'/'.self::LOCK_FILENAME . "\n\n";
+            $shellContent .= $this->createContent(true) . "\n\n";
+            $shellContent .= implode("\n", $this->commentLines) . "\n\n";
+            $shellContent .= "rm " . dirname(__DIR__).'/'.self::LOCK_FILENAME . "\n\n";
+            
+            fwrite($fp, $shellContent);
+            fclose($fp);
+        }
 
+        return $shellContent;
+    }
+
+    /**
+     * @return string
+     */
+    public function savePreviewScript()
+    {
+        $shellContent = '';
+        
+        $fp = fopen(dirname(__DIR__).'/'.self::PREVIEW_FILENAME, 'w');
+        if ($fp) {
+            $shellContent .= self::HEADER . "\n\n";
+            $shellContent .= $this->createContent() . "\n\n";
+            $shellContent .= implode("\n", $this->commentLines) . "\n\n";
             fwrite($fp, $shellContent);
             fclose($fp);
         }
@@ -328,13 +335,13 @@ class shellScript
     /**
      * @return string|null
      */
-    protected function getImageFolder()
+    protected function getImageFolderName()
     {
-        if (is_null($this->imageFolder)) {
-            $this->imageFolder = self::BASE_IMG_FOLDER . '/' . date("YmdHis");
+        if (is_null($this->imageFolderName)) {
+            $this->imageFolderName = date("YmdHis");
         }
 
-        return $this->imageFolder;
+        return $this->imageFolderName;
     }
 
     /**
@@ -343,9 +350,10 @@ class shellScript
     protected function lockFileContents()
     {
         $fileContent = [
-            'timelapseTotalTime' => 3600, //FIXME
+            'timestamp' => time(),
+            'timelapseTotalTime' => $this->getTimelapseTotalTime(),
             'timelapseImageCount' => $this->getTimelapseImageCount(),
-            'timelapseImageFolder' => $this->getImageFolder(),
+            'timelapseImageFolder' => $this->getImageFolderName(),
         ];
         
 
@@ -368,82 +376,28 @@ class shellScript
     }
 
     /**
-     * @return string
+     * @return int
      */
     protected function getTimelapseTotalTime()
     {
         if ($this->timeout && $this->timelapse) {
-            $s = round($this->timeout / 1000);
-
-            return sprintf('%02d:%02d:%02d', ($s / 3600), ($s / 60 % 60), $s % 60);
+            return round($this->timeout / 1000);
         }
 
-        return '';
+        return 0;
     }
 
-    /**
-     * @return bool
-     */
-    protected function isTimelapseScript()
-    {
-        if ($this->runType == 'timelapse') {
-            return true;
-        }
-
-        return false;
-    }
-
-
-    /**
-     * @return bool
-     */
-    public static function checkLockFile()
-    {
-        return file_exists(self::LOCK_FILENAME);
-    }
-
+    
     /**
      * @return array|mixed
      */
     public static function getLockFileContents()
     {
-        if (self::checkLockFile()) {
-            return file_get_contents(self::LOCK_FILENAME);
+        if (file_exists(dirname(__DIR__) . '/' . self::LOCK_FILENAME)) {
+            return file_get_contents(dirname(__DIR__).'/' . self::LOCK_FILENAME);
         }
 
         return '{}';
-    }
-
-    /**
-     * @return array
-     */
-    public function executeScript()
-    {
-        if ($this->isTimelapseScript()) {
-            $nImages = $this->getTimelapseImageCount();
-            $totalTime = $this->getTimelapseTotalTime();
-            $info = 'A timelapse is running. Will end in ' . $totalTime . ' and generate ' . $nImages . ' images.';
-            $status = 'info'; //info, success, warning, danger
-            $type = 'timelapse';
-        } else {
-            $type = 'preview';
-            $nImages = 0;
-            $totalTime = 0;
-            $info = '';
-            $status = 'info';
-        }
-
-
-        if ($this->isTimelapseScript()) {
-            $previewImage = 'resources/images/timelapse-running.png';
-        } elseif ($this->demoMode) {
-            $previewImage = 'http://lorempixel.com/550/450/?t=' . uniqid();
-        } else {
-            $previewImage = 'media/img.jpg?t=' . uniqid();
-        }
-
-
-        return array($previewImage, $info, $status, $type);
     }
 
 }

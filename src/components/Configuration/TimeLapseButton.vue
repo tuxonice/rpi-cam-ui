@@ -4,7 +4,7 @@
       type="button"
       @click.prevent="preview"
       class="btn btn-primary btn-lg "
-      id="live-image"
+      :disabled="isDisabled"
     >
       Run Timelapse
     </button>
@@ -17,6 +17,9 @@ import { mapState } from "vuex";
 
 export default {
   name: "TimeLapseButton",
+  props: {
+    isDisabled: Boolean
+  },
   computed: {
     ...mapState([
       "basicConfiguration",

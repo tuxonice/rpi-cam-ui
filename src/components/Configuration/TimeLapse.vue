@@ -66,7 +66,7 @@
         <option value="4/3">4/3</option>
       </select>
     </div>
-    <time-lapse-button></time-lapse-button>
+    <time-lapse-button :is-disabled="timelapseButtonDisabled"></time-lapse-button>
   </div>
 </template>
 
@@ -87,6 +87,11 @@ export default {
       mencoderVcodec: null,
       mencoderAspect: null
     };
+  },
+  computed: {
+    timelapseButtonDisabled() {
+      return !this.timeout || !this.timelapse;
+    }
   },
   methods: {
     updateTimeout() {
