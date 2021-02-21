@@ -40,7 +40,7 @@ export default {
           transformationsConfiguration: this.transformationsConfiguration
         }
       );
-      this.$store.commit("setShellContent", shellContent.data);
+      this.$store.commit("setShellContent", shellContent.data.content);
       setTimeout(() => {
         this.isPreviewDisabled = false;
         this.$store.state.previewImage =

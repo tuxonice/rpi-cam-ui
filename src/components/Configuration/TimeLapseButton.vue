@@ -30,12 +30,13 @@ export default {
   },
   methods: {
     preview: async function() {
-      await axios.post("http://127.0.0.1:8000/timelapse.php", {
+      const shellContent = await axios.post("timelapse.php", {
         basicConfiguration: this.basicConfiguration,
         effectsConfiguration: this.effectsConfiguration,
         transformationsConfiguration: this.transformationsConfiguration,
         timeLapseConfiguration: this.timeLapseConfiguration
       });
+      this.$store.commit("setShellContent", shellContent.data.content);
     }
   }
 };
