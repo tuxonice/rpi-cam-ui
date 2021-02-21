@@ -3,7 +3,6 @@
 .settings/
 .idea/
 /vendor
-public/media
 dist/
 node_modules
 rpi-ui-cam.code-workspace

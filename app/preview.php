@@ -5,7 +5,7 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, X-Requested-With");
 
-require '../config/config.php';
+require 'config.php';
 //$configuration = json_decode(file_get_contents("php://input"), true);
 
 
@@ -34,7 +34,7 @@ $configuration["basicConfiguration"] = [
 
 $script = new shellScript($configuration, _APP_DEMO_MODE);
 $shellContent = $script->savePreviewScript();
-echo(nl2br($shellContent));
+echo($shellContent);
 die;
 header('Content-Type: application/json');
 echo json_encode([

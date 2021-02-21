@@ -1,11 +1,7 @@
 <template>
   <div class="col-md-6">
     <h2>Preview</h2>
-    <img
-      :src="previewImage"
-      class="img-responsive"
-      alt="Responsive image"
-    />
+    <img :src="previewImage" class="img-responsive" alt="Responsive image" />
     <preview-button></preview-button>
   </div>
 </template>

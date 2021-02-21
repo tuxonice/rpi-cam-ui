@@ -25,26 +25,27 @@ export default {
     ])
   },
   data() {
-      return {
-        isPreviewDisabled: false,
-      }
-    
+    return {
+      isPreviewDisabled: false
+    };
   },
   methods: {
     preview: async function() {
       this.isPreviewDisabled = true;
-      const shellContent = await axios.post("http://127.0.0.1:8000/preview.php", {
-        basicConfiguration: this.basicConfiguration,
-        effectsConfiguration: this.effectsConfiguration,
-        transformationsConfiguration: this.transformationsConfiguration
-      });
-      this.$store.commit("setShellContent", shellContent.data.shellContent);
+      const shellContent = await axios.post(
+        "preview.php",
+        {
+          basicConfiguration: this.basicConfiguration,
+          effectsConfiguration: this.effectsConfiguration,
+          transformationsConfiguration: this.transformationsConfiguration
+        }
+      );
+      this.$store.commit("setShellContent", shellContent.data);
       setTimeout(() => {
         this.isPreviewDisabled = false;
-        console.log(process.env.VUE_APP_DEMO_MODE);
-        this.$store.state.previewImage = 'http://lorempixel.com/550/450/?' + Date.now();
+        this.$store.state.previewImage =
+          "http://lorempixel.com/550/450/?" + Date.now();
       }, 2000);
-      
     }
   }
 };

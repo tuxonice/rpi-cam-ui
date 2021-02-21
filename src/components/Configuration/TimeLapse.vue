@@ -66,7 +66,9 @@
         <option value="4/3">4/3</option>
       </select>
     </div>
-    <time-lapse-button :is-disabled="timelapseButtonDisabled"></time-lapse-button>
+    <time-lapse-button
+      :is-disabled="timelapseButtonDisabled"
+    ></time-lapse-button>
   </div>
 </template>
 

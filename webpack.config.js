@@ -5,12 +5,12 @@ module.exports = {
   entry: "./assets/js/index.js",
   output: {
     filename: "bundle.js",
-    path: path.resolve(__dirname, "public/dist")
+    path: path.resolve(__dirname, "dist")
   },
   plugins: [
     new CopyPlugin({
       patterns: [
-        { from: "assets/images", to: path.resolve(__dirname, "public/dist") }
+        { from: "assets/images/", to: path.resolve(__dirname, "dist/") }
       ]
     })
   ],

@@ -35,8 +35,8 @@ export default new Vuex.Store({
       mencoderVcodec: null,
       mencoderAspect: null
     },
-    shellContent: '',
-    previewImage: 'dist/timelapse-splash.png'
+    shellContent: "",
+    previewImage: "images/timelapse-splash.png"
   },
   mutations: {
     setTime(state, status) {

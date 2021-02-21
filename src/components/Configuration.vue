@@ -2,7 +2,6 @@
   <div class="col-md-6">
     <h2>Configuration</h2>
     <form id="configData">
-      <input type="hidden" name="type" id="type" value="preview" />
       <div>
         <!-- Nav tabs -->
         <ul class="nav nav-tabs">
@@ -55,7 +54,6 @@ import EffectsConfiguration from "@/components/Configuration/Effects.vue";
 import TransformationsConfiguration from "@/components/Configuration/Transformations.vue";
 import TimeLapseConfiguration from "@/components/Configuration/TimeLapse.vue";
 import ShellScriptConfiguration from "@/components/Configuration/ShellScript.vue";
-import axios from "axios";
 
 export default {
   name: "Configuration",
@@ -65,24 +63,6 @@ export default {
     TransformationsConfiguration,
     TimeLapseConfiguration,
     ShellScriptConfiguration
-  },
-  mounted() {},
-  methods: {
-    preview: function() {
-      axios
-        .post("http://127.0.0.1:8000/ajax.php", {
-          basicConfiguration: this.basicConfiguration,
-          effectsConfiguration: this.effectsConfiguration,
-          transformationsConfiguration: this.transformationsConfiguration,
-          timeLapseConfiguration: this.timeLapseConfiguration
-        })
-        .then(function(response) {
-          console.log(response);
-        })
-        .catch(function(error) {
-          console.log(error);
-        });
-    }
   },
   data: function() {
     return {
